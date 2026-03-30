@@ -13,6 +13,10 @@ name: Build Release Image
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   GHCR_REGISTRY: ghcr.io
   REGISTRY_IMAGE: ghcr.io/cptkk/overleaf-pro
