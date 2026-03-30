@@ -185,7 +185,7 @@ jobs:
         with:
           image-names: overleaf-pro
           cut-off: 1s, UTC+8
-          account-type: user
+          account-type: personal
           untagged-only: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -327,6 +327,6 @@ jobs:
         with:
           image-names: overleaf-pro/git-bridge
           cut-off: 1s, UTC+8
-          account-type: user
+          account-type: personal
           untagged-only: true
           token: ${{ secrets.GITHUB_TOKEN }}
