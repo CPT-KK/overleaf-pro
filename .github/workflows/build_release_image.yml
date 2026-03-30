@@ -3,7 +3,7 @@
 # and push them to GitHub Container Registry
 #
 # Published at:
-#     ghcr.io/ayaka-notes/overleaf-pro/
+#     ghcr.io/cpt-kk/overleaf-pro/
 #
 # ---------------------------------
 
@@ -35,7 +35,7 @@ jobs:
     steps:
       - name: Get latest release branch
         run: |
-          echo "LATEST_RELEASE_REF=$(git ls-remote --heads --sort='version:refname' https://github.com/ayaka-notes/overleaf-pro.git 'release-v*' | tail -n1 | cut -d/ -f3)" >> $GITHUB_ENV
+          echo "LATEST_RELEASE_REF=$(git ls-remote --heads --sort='version:refname' https://github.com/cpt-kk/overleaf-pro.git 'release-v*' | tail -n1 | cut -d/ -f3)" >> $GITHUB_ENV
       - name: "Checkout Repository"
         uses: actions/checkout@main
         with:
@@ -73,7 +73,7 @@ jobs:
       - name: "Sync package-lock.json And Prepare .dockerignore"
         run: |
           docker run --rm -v "$(pwd)":/workspace -w /workspace node:22.18.0 npm install --package-lock-only --ignore-scripts
-          docker run --rm -v "$(pwd)/services/web/":/overleaf/services/web -w /overleaf/services/web ghcr.io/ayaka-notes/overleaf-pro/dev:webpack npm run extract-translations
+          docker run --rm -v "$(pwd)/services/web/":/overleaf/services/web -w /overleaf/services/web ghcr.io/cpt-kk/overleaf-pro/dev:webpack npm run extract-translations
           cd ./server-ce/
           cp .dockerignore ../
       
@@ -186,7 +186,7 @@ jobs:
           image-names: overleaf-pro
           cut-off: 1s, UTC+8
           account-type: org
-          org-name: ayaka-notes
+          org-name: cpt-kk
           untagged-only: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -203,7 +203,7 @@ jobs:
     steps:
       - name: Get latest release branch
         run: |
-          echo "LATEST_RELEASE_REF=$(git ls-remote --heads --sort='version:refname' https://github.com/ayaka-notes/overleaf-pro.git 'release-v*' | tail -n1 | cut -d/ -f3)" >> $GITHUB_ENV
+          echo "LATEST_RELEASE_REF=$(git ls-remote --heads --sort='version:refname' https://github.com/cpt-kk/overleaf-pro.git 'release-v*' | tail -n1 | cut -d/ -f3)" >> $GITHUB_ENV
       - name: "Checkout Repository"
         uses: actions/checkout@main
         with:
@@ -329,6 +329,6 @@ jobs:
           image-names: overleaf-pro/git-bridge
           cut-off: 1s, UTC+8
           account-type: org
-          org-name: ayaka-notes
+          org-name: cpt-kk
           untagged-only: true
           token: ${{ secrets.GITHUB_TOKEN }}
