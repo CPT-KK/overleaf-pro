@@ -185,9 +185,10 @@ jobs:
         with:
           image-names: overleaf-pro
           cut-off: 1s, UTC+8
-          account-type: personal
+          account-type: org
+          org-name: cpt-kk
           untagged-only: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ORGTOKEN }}
 
   build_git_bridge:
     strategy:
@@ -327,6 +328,7 @@ jobs:
         with:
           image-names: overleaf-pro/git-bridge
           cut-off: 1s, UTC+8
-          account-type: personal
+          account-type: org
+          org-name: cpt-kk
           untagged-only: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ORGTOKEN }}
