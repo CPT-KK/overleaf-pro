@@ -61,7 +61,7 @@ export default _.template(`\
 									<p style="margin: 0; padding: 0;">&#xA0;</p>
 
 									<p class="force-overleaf-style" style="font-size: 12px;">
-										If the button above does not appear, please copy and paste this link into your browser's address bar:
+										如果上方的按钮没有出现，请将此链接复制并粘贴到您浏览器的地址栏中：
 									</p>
 
 									<p class="force-overleaf-style" style="font-size: 12px;">
