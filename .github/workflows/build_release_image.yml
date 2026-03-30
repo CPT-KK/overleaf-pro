@@ -186,6 +186,7 @@ jobs:
           account: user
           image-names: "overleaf-pro"
           cut-off: 1s
+          tag-selection: untagged
           token: ${{ secrets.GITHUB_TOKEN }}
 
   build_git_bridge:
@@ -327,4 +328,5 @@ jobs:
           account: user
           image-names: "overleaf-pro/git-bridge"
           cut-off: 1s
+          tag-selection: untagged
           token: ${{ secrets.GITHUB_TOKEN }}

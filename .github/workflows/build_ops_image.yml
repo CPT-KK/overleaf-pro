@@ -119,11 +119,10 @@ jobs:
 
       # --- Retention Policy: Delete old images ---
       - name: Delete old images
-        uses: snok/container-retention-policy@v2
+        uses: snok/container-retention-policy@v3.0.0
         with:
-          image-names: overleaf-pro/ops*
-          cut-off: A week ago UTC+8
-          account-type: org
-          org-name: cpt-kk
-          untagged-only: false
-          token: ${{ secrets.ORGTOKEN }}
+          account: user
+          image-names: "overleaf-pro/ops*"
+          cut-off: 1w
+          tag-selection: both
+          token: ${{ secrets.GITHUB_TOKEN }}
