@@ -261,7 +261,7 @@ jobs:
           labels: |
             ${{ steps.meta.outputs.labels }}
             com.overleaf.pro.revision=${{ env.MONOREPO_REVISION }}
-          tags: ghcr.io/ayaka-notes/overleaf-pro/git-bridge:${{ env.version }}-${{ env.PLATFORM_PAIR }}
+          tags: ${{ env.REGISTRY_IMAGE }}/git-bridge:${{ env.version }}-${{ env.PLATFORM_PAIR }}
           outputs: type=image,name-canonical=true,push=true
           provenance: false
           sbom: false
