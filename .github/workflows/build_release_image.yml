@@ -35,7 +35,7 @@ jobs:
     steps:
       - name: Get latest release branch
         run: |
-          echo "LATEST_RELEASE_REF=$(git ls-remote --heads --sort='version:refname' https://github.com/ayaka-notes/overleaf-pro.git 'release-v*' | tail -n1 | cut -d/ -f3)" >> $GITHUB_ENV
+          echo "LATEST_RELEASE_REF=$(git ls-remote --heads --sort='version:refname' https://github.com/cpt-kk/overleaf-pro.git 'release-v*' | tail -n1 | cut -d/ -f3)" >> $GITHUB_ENV
       - name: "Checkout Repository"
         uses: actions/checkout@main
         with:
@@ -202,7 +202,7 @@ jobs:
     steps:
       - name: Get latest release branch
         run: |
-          echo "LATEST_RELEASE_REF=$(git ls-remote --heads --sort='version:refname' https://github.com/ayaka-notes/overleaf-pro.git 'release-v*' | tail -n1 | cut -d/ -f3)" >> $GITHUB_ENV
+          echo "LATEST_RELEASE_REF=$(git ls-remote --heads --sort='version:refname' https://github.com/cpt-kk/overleaf-pro.git 'release-v*' | tail -n1 | cut -d/ -f3)" >> $GITHUB_ENV
       - name: "Checkout Repository"
         uses: actions/checkout@main
         with:

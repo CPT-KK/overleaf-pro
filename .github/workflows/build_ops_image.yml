@@ -8,12 +8,12 @@
 
 name: Build Operations Image
 on:
-  push:
-    branches:
-      - server-pro
-  pull_request:
-    branches:
-      - server-pro
+#   push:
+#     branches:
+#       - server-pro
+#   pull_request:
+#     branches:
+#       - server-pro
   workflow_dispatch:
 
 env:
