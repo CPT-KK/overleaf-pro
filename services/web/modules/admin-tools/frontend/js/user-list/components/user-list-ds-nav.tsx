@@ -176,7 +176,7 @@ export function UserListDsNav() {
                                 setActiveTab('users')
                               }}
                             >
-                              {"Users"}
+                              {t('users')}
                             </a>
                           </li>
                           <li className="nav-item" role="presentation">
