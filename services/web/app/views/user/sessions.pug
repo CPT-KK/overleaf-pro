@@ -20,7 +20,7 @@ block content
 												th #{translate("session_created_at")}
 											tr
 												td #{currentSession.ip_address}
-												td #{moment(currentSession.session_created).utc().format('Do MMM YYYY, h:mm a')} UTC
+												td #{moment(currentSession.session_created).utcOffset(8).format('YYYY-MM-DD HH:mm')} (UTC+8)
 
 							h3 #{translate("other_sessions")}
 							div
@@ -43,7 +43,7 @@ block content
 											each session in sessions
 												tr
 													td #{session.ip_address}
-													td #{moment(session.session_created).utc().format('Do MMM YYYY, h:mm a')} UTC
+													td #{moment(session.session_created).utcOffset(8).format('YYYY-MM-DD HH:mm')} (UTC+8)
 
 										p.actions
 											.text-center
