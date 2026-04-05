@@ -28,6 +28,6 @@ export function formatTimeBasedOnYear(date: moment.MomentInput) {
   const currentDate = moment()
 
   return currentDate.diff(date, 'years') > 0
-    ? formatTime(date, 'D MMMM YYYY, h:mm a')
-    : formatTime(date, 'D MMMM, h:mm a')
+    ? formatTime(date, 'YYYY-MM-DD HH:mm')
+    : formatTime(date, 'YYYY-MM-DD HH:mm')
 }

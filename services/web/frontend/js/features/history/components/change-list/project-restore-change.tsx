@@ -14,7 +14,7 @@ function ProjectRestoreChange({
   return (
     <div className="history-version-restore-project">
       {t('file_action_restored_project', {
-        date: formatTime(origin.timestamp, 'Do MMMM, h:mm a'),
+        date: formatTime(origin.timestamp, 'YYYY-MM-DD HH:mm'),
       })}
     </div>
   )

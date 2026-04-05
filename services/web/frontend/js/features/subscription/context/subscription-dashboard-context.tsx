@@ -153,7 +153,7 @@ export function SubscriptionDashboardProvider({
     pausedDate.setMonth(
       pausedDate.getMonth() + personalSubscription.payment.remainingPauseCycles
     )
-    return formatTime(pausedDate, 'MMMM Do, YYYY')
+    return formatTime(pausedDate, 'YYYY-MM-DD')
   }, [personalSubscription])
 
   useEffect(() => {

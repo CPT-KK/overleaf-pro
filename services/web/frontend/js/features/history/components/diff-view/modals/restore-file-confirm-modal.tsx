@@ -24,8 +24,8 @@ export function RestoreFileConfirmModal({
   onHide,
 }: RestoreFileConfirmModalProps) {
   const { t } = useTranslation()
-  const date = useMemo(() => formatTime(timestamp, 'Do MMMM'), [timestamp])
-  const time = useMemo(() => formatTime(timestamp, 'h:mm a'), [timestamp])
+  const date = useMemo(() => formatTime(timestamp, 'YYYY-MM-DD'), [timestamp])
+  const time = useMemo(() => formatTime(timestamp, 'HH:mm'), [timestamp])
 
   return (
     <OLModal show={show} onHide={onHide}>

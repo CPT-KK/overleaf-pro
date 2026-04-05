@@ -223,7 +223,7 @@ function PreviewSubscriptionChange() {
             <div className="mt-5">
               <Trans
                 i18nKey="this_total_reflects_the_amount_due_until"
-                values={{ date: moment(preview.nextInvoice.date).format('LL') }}
+                values={{ date: moment(preview.nextInvoice.date).utcOffset(8).format('YYYY-MM-DD') }}
                 components={{ strong: <strong /> }}
                 shouldUnescape
                 tOptions={{ interpolation: { escapeValue: true } }}
@@ -306,7 +306,7 @@ function PreviewSubscriptionChange() {
             <div className="mt-5">
               <Trans
                 i18nKey="the_next_payment_will_be_collected_on"
-                values={{ date: moment(preview.nextInvoice.date).format('LL') }}
+                values={{ date: moment(preview.nextInvoice.date).utcOffset(8).format('YYYY-MM-DD') }}
                 components={{ strong: <strong /> }}
                 shouldUnescape
                 tOptions={{ interpolation: { escapeValue: true } }}

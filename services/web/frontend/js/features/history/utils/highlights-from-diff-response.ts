@@ -30,7 +30,7 @@ export function highlightsFromDiffResponse(
       }
       const user = meta.users?.[0]
       const name = displayNameForUser(user)
-      const date = moment(meta.end_ts).format('Do MMM YYYY, h:mm a')
+      const date = moment(meta.end_ts).utcOffset(8).format('YYYY-MM-DD HH:mm')
       if (isInsertion) {
         highlights.push({
           type: 'addition',
