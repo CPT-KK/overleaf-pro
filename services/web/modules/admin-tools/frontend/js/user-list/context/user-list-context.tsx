@@ -118,11 +118,11 @@ export function UserListProvider({ children }: UserListProviderProps) {
     order: 'asc',
   })
 
-  const { t } = useTranslation()
+  const { t, ready: i18nReady } = useTranslation()
   const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
   const filterTranslations = useMemo(
     () => new Map(filterKeys.map(key => [key, capitalize(t(`${key}`))])),
-    [t]
+    [t, i18nReady]
   )
 
   const [filter, setFilter] = usePersistedState<Filter>(
