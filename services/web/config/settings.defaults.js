@@ -452,11 +452,8 @@ module.exports = {
     escapeHTMLInVars: process.env.I18N_ESCAPE_HTML_IN_VARS === 'true',
     subdomainLang: {
       www: { lngCode: 'en', url: siteUrl },
-      ...(process.env.OVERLEAF_SITE_LANGUAGE === 'zh-CN' ? {
-        'zh-CN': { lngCode: 'zh-CN', url: siteUrl },
-      } : {}),
     },
-    defaultLng: process.env.OVERLEAF_SITE_LANGUAGE || 'en',
+    defaultLng: 'en',
   },
 
   // Spelling languages
