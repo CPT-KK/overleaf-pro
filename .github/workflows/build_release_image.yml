@@ -181,7 +181,7 @@ jobs:
 
       # --- Retention Policy: Delete old images ---
       - name: Delete old images
-        uses: snok/container-retention-policy@v3
+        uses: snok/container-retention-policy@v3.0.0
         with:
           account: user
           image-names: "overleaf-pro"
@@ -323,7 +323,7 @@ jobs:
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}/git-bridge:${{ needs.build_git_bridge.outputs.version }}
 
       - name: Delete old images
-        uses: snok/container-retention-policy@v3
+        uses: snok/container-retention-policy@v3.0.0
         with:
           account: user
           image-names: "overleaf-pro/git-bridge"
