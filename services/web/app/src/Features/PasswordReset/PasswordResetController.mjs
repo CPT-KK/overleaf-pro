@@ -155,12 +155,12 @@ async function requestReset(req, res, next) {
       message: req.i18n.translate('password_reset_email_sent'),
     })
   } else if (status === 'secondary') {
-    return res.status(404).json({
-      message: req.i18n.translate('secondary_email_password_reset'),
+    return res.status(200).json({
+      message: req.i18n.translate('password_reset_email_sent'),
     })
   } else {
-    return res.status(404).json({
-      message: req.i18n.translate('cant_find_email'),
+    return res.status(200).json({
+      message: req.i18n.translate('password_reset_email_sent'),
     })
   }
 }
