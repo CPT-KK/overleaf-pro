@@ -5,6 +5,8 @@ import getMeta from '@/utils/meta'
 import { resources } from '@/i18n-resources/writefull'
 
 const LANG = getMeta('ol-i18n').currentLangCode
+// Moment uses nb for the Norwegian Bokmal locale.
+const MOMENT_LANG = LANG === 'no' ? 'nb' : LANG.toLowerCase()
 
 // Since we are rendering React from Angular, the initialisation is
 // synchronous on page load (but hidden behind the loading screen). This
@@ -67,8 +69,8 @@ const localesPromise = Promise.all([
     )
   }),
   // localise moment for dates like "x hours ago" (.catch → keep en default)
-  import(`moment/locale/${LANG.toLowerCase()}`)
-    .then(() => moment.locale(LANG.toLowerCase()))
+  import(`moment/locale/${MOMENT_LANG}`)
+    .then(() => moment.locale(MOMENT_LANG))
     .catch(() => {}),
 ])
 
