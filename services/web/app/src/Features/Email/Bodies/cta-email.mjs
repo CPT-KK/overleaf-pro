@@ -39,7 +39,7 @@ export default _.template(`\
 <% } %>
 
 <p style="margin: 0 0 4px 0; font-size: 14px; line-height: 20px; color: ${colors.textMuted};">
-  If the button above does not appear, please copy and paste this link into your browser's address bar:
+  如果上方的按钮没有出现，请将此链接复制并粘贴到您浏览器的地址栏中：
 </p>
 <p style="margin: 0; font-size: 14px; line-height: 20px; word-break: break-all;">
   <a href="<%= ctaURL %>" style="color: ${colors.linkGreen}; text-decoration: none;"><%= ctaURL %></a>
