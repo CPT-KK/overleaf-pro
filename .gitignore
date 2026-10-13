@@ -4,3 +4,8 @@
 # user defined files
 .env
 docker-compose.override.yml
+
+# Local assistant configuration and dependencies from older npm checkouts
+CLAUDE.md
+.claude/
+node_modules/
