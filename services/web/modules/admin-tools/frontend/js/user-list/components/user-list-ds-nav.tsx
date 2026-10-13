@@ -11,7 +11,7 @@ import UserListTitle from './title/user-list-title'
 import LoadMore from './load-more'
 import OLCol from '@/shared/components/ol/ol-col'
 import OLRow from '@/shared/components/ol/ol-row'
-import { TableContainer } from '@/shared/components/table'
+import { TableContainer } from '@/shared/components/ol/ol-table'
 import DashApiError from '@/features/project-list/components/dash-api-error'
 import getMeta from '@/utils/meta'
 import DefaultNavbar from '@/shared/components/navbar/default-navbar'
@@ -160,7 +160,7 @@ export function UserListDsNav() {
               {error ? <DashApiError /> : ''}
               <main aria-labelledby="main-content">
                 <div className="card"
-                  style={{ backgroundColor: '#FFF' }}
+                  style={{ backgroundColor: 'var(--bg-primary-themed)' }}
                 >
                   <div className="card-body">
                     <div className="ol-tabs">
@@ -176,7 +176,7 @@ export function UserListDsNav() {
                                 setActiveTab('users')
                               }}
                             >
-                              {t('users')}
+                              {t('user_administration')}
                             </a>
                           </li>
                           <li className="nav-item" role="presentation">

@@ -1,7 +1,7 @@
 import GitLogoOrange from "@/shared/svgs/git-logo-orange";
 import { Trans, useTranslation } from 'react-i18next'
 import EmailCell from "@/features/settings/components/emails/cell";
-import Button from '@/shared/components/button/button'
+import Button from '@/shared/components/ol/ol-button'
 
 import moment from 'moment';
 
@@ -90,7 +90,7 @@ function LinkingGitBridgeTable() {
                             </Col>
                             <Col md={2} className="d-none d-sm-block">
                                 <EmailCell>
-                                    {moment(token.created_at).utcOffset(8).format('YYYY-MM-DD')}
+                                    {moment(token.createdAt).utcOffset(8).format('YYYY-MM-DD')}
                                 </EmailCell>
                             </Col>
                             <Col md={2} className="d-none d-sm-block">

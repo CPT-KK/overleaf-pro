@@ -160,7 +160,7 @@ function HistoryVersion({
             >
               <b>{formatTime(update.meta.end_ts, 'YYYY-MM-DD HH:mm')}</b>
             </time>
-            {orderedLabels.map(label => (
+            {orderedLabels.map((label) => (
               <TagTooltip
                 key={label.id}
                 showTooltip

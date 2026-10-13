@@ -2,14 +2,32 @@ import Bowser from 'bowser'
 import Settings from '@overleaf/settings'
 import Url from 'node:url'
 import UrlHelper from '../Features/Helpers/UrlHelper.mjs'
+import { z, parseReq } from './Validation.mjs'
 
 const { getSafeRedirectPath } = UrlHelper
 const unsupportedBrowserPath = /^\/unsupported-browser\/?$/i
 
+// middleware schema is non-strict: it validates only the header this
+// middleware consumes, applied globally to every route
+const unsupportedBrowserMiddlewareSchema = z.object({
+  headers: z.object({
+    'user-agent': z.string().optional(),
+  }),
+})
+
+const renderUnsupportedBrowserPageSchema = z.object({
+  query: z.object({
+    fromURL: z.string().optional(),
+  }),
+})
+
 function isUnsupportedBrowser(req) {
   if (!Settings.unsupportedBrowsers) return false
 
-  const userAgent = req.headers['user-agent']
+  const { headers } = parseReq(req, unsupportedBrowserMiddlewareSchema, {
+    logOnly: true,
+  })
+  const userAgent = headers['user-agent']
 
   if (!userAgent) return false
 
@@ -23,7 +41,7 @@ function isUnsupportedBrowser(req) {
 }
 
 function unsupportedBrowserMiddleware(req, res, next) {
-  // Match the route's optional trailing slash and case-insensitive spelling.
+  // Match Express routing, including case and an optional trailing slash.
   if (unsupportedBrowserPath.test(req.path)) return next()
 
   if (isUnsupportedBrowser(req)) {
@@ -39,17 +57,19 @@ function unsupportedBrowserMiddleware(req, res, next) {
 }
 
 function renderUnsupportedBrowserPage(req, res) {
+  const { query } = parseReq(req, renderUnsupportedBrowserPageSchema, {
+    logOnly: true,
+  })
   let fromURL
   let redirectPath = '/'
-  if (typeof req.query.fromURL === 'string') {
+  if (typeof query.fromURL === 'string') {
     try {
-      redirectPath = getSafeRedirectPath(req.query.fromURL) || '/'
+      redirectPath = getSafeRedirectPath(query.fromURL) || '/'
       fromURL = Settings.siteUrl + redirectPath
     } catch (e) {}
   }
-
   if (!isUnsupportedBrowser(req)) {
-    // Old links may point back to this page, which would cause a redirect loop.
+    // Stale return links must not redirect back to the warning page.
     if (
       unsupportedBrowserPath.test(new URL(redirectPath, Settings.siteUrl).pathname)
     ) {

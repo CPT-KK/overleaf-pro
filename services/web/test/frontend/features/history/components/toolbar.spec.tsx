@@ -85,7 +85,7 @@ describe('history toolbar', function () {
     )
 
     cy.get('.history-react-toolbar').within(() => {
-      cy.get('div:first-child').contains('Viewing 13th April')
+      cy.get('div:first-child').contains('Viewing 2023-04-13')
     })
 
     cy.get('.history-react-toolbar-file-info').contains('1 change in main.tex')
@@ -133,9 +133,9 @@ describe('history toolbar', function () {
     )
 
     cy.get('.history-react-toolbar').within(() => {
-      cy.get('div:first-child').contains('Comparing from 12th April')
+      cy.get('div:first-child').contains('Comparing from 2023-04-12')
 
-      cy.get('div:first-child').contains('to 13th April')
+      cy.get('div:first-child').contains('to 2023-04-13')
     })
   })
 })

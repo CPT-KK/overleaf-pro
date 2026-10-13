@@ -55,9 +55,6 @@ describe('change list', function () {
     cy.intercept('GET', '/project/*/filetree/diff*', {
       body: { diff: [{ pathname: 'main.tex' }, { pathname: 'name.tex' }] },
     }).as('diff')
-    window.metaAttributesCache.set('ol-inactiveTutorials', [
-      'react-history-buttons-tutorial',
-    ])
   })
 
   describe('toggle switch', function () {
@@ -296,7 +293,7 @@ describe('change list', function () {
         .within(() => {
           cy.findByTestId('history-version-metadata-time').should(
             'have.text',
-            formatTime(updates.updates[0].meta.end_ts, 'Do MMMM, h:mm a')
+            formatTime(updates.updates[0].meta.end_ts, 'YYYY-MM-DD HH:mm')
           )
         })
     })

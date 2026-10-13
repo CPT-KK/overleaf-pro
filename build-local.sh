@@ -7,11 +7,11 @@
 set -euo pipefail
 
 # ---------- Configuration ----------
-REGISTRY_IMAGE="overleaf-pro"
-PLATFORM="linux/amd64"
-ARCH="amd64"
-NODE_IMAGE="node:22.18.0"
-WEBPACK_DEV_IMAGE="ghcr.io/ayaka-notes/overleaf-pro/dev:webpack"
+REGISTRY_IMAGE="${REGISTRY_IMAGE:-overleaf-pro}"
+PLATFORM="${PLATFORM:-linux/amd64}"
+ARCH="${PLATFORM##*/}"
+NODE_IMAGE="${NODE_IMAGE:-node:24.18.1}"
+WEBPACK_DEV_IMAGE="${WEBPACK_DEV_IMAGE:-ghcr.io/ayaka-notes/overleaf-pro/dev:webpack}"
 # -----------------------------------
 
 # Colors for output
@@ -21,7 +21,7 @@ YELLOW='\033[1;33m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-info()  { echo -e "${CYAN[INFO]} $*${NC}"; }
+info()  { echo -e "${CYAN}[INFO] $*${NC}"; }
 ok()    { echo -e "${GREEN}[OK] $*${NC}"; }
 warn()  { echo -e "${YELLOW}[WARN] $*${NC}"; }
 err()   { echo -e "${RED}[ERROR] $*${NC}"; }
@@ -37,16 +37,22 @@ usage() {
     echo ""
     echo "Options:"
     echo "  --tag <tag>           Custom tag for the final image (default: auto-detect from branch)"
-    echo "  --skip-sync-lock      Skip the package-lock.json sync step"
+    echo "  --skip-sync-lock      Skip the yarn.lock sync step"
     echo "  --skip-translations   Skip the i18n translation extraction step"
     echo "  --push                Push images to registry after build"
     echo "  -h, --help            Show this help message"
-    exit 0
+    echo ""
+    echo "Environment: REGISTRY_IMAGE, PLATFORM, NODE_IMAGE, WEBPACK_DEV_IMAGE"
+    exit "${1:-0}"
 }
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --tag)
+            if [[ $# -lt 2 || -z "$2" || "$2" == --* ]]; then
+                err "--tag requires a value"
+                exit 1
+            fi
             CUSTOM_TAG="$2"
             shift 2
             ;;
@@ -67,7 +73,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             err "Unknown option: $1"
-            usage
+            usage 1
             ;;
     esac
 done
@@ -112,20 +118,45 @@ echo "  App tag:    $APP_TAG"
 echo "========================================"
 echo ""
 
-# ---- Step 1: Sync package-lock.json ----
+# ---- Step 1: Sync yarn.lock ----
 if [[ "$SKIP_SYNC_LOCK" == false ]]; then
-    info "Step 1/5: Syncing package-lock.json ..."
+    info "Step 1/5: Syncing yarn.lock ..."
     docker run --rm \
         -v "$(pwd)":/workspace \
         -w /workspace \
         "$NODE_IMAGE" \
-        npm install --package-lock-only --ignore-scripts
-    ok "package-lock.json synced"
+        sh -c "corepack enable && yarn install --mode=update-lockfile"
+    ok "yarn.lock synced"
 else
-    warn "Step 1/5: Skipping package-lock.json sync (--skip-sync-lock)"
+    warn "Step 1/5: Skipping yarn.lock sync (--skip-sync-lock)"
 fi
 
-# ---- Step 2: Extract translations ----
+# ---- Step 2: Apply current locale overlays and extract translations ----
+# The release workflow overlays the latest version before the scanner runs.
+patch_dir="$(find services/web/locales/locales_patches -mindepth 1 -maxdepth 1 -type d -name 'v*' | sort -V | tail -n1)"
+if [[ -n "$patch_dir" ]]; then
+    info "Applying locale patch: $patch_dir"
+    cp "$patch_dir"/*.json services/web/locales/
+fi
+if [[ -d services/web/locales/locales_patches/added ]]; then
+    info "Merging additional upstream translations ..."
+    docker run --rm \
+        -v "$(pwd)":/workspace \
+        -w /workspace \
+        "$NODE_IMAGE" node -e '
+            const fs = require("node:fs")
+            const path = require("node:path")
+            const locales = "services/web/locales"
+            const added = path.join(locales, "locales_patches/added")
+            for (const name of fs.readdirSync(added)) {
+                if (!name.endsWith(".json") || name === "added-translations.json") continue
+                const target = path.join(locales, name)
+                const base = JSON.parse(fs.readFileSync(target, "utf8"))
+                const extra = JSON.parse(fs.readFileSync(path.join(added, name), "utf8"))
+                fs.writeFileSync(target, JSON.stringify({ ...base, ...extra }, null, 2) + "\n")
+            }
+        '
+fi
 if [[ "$SKIP_TRANSLATIONS" == false ]]; then
     info "Step 2/5: Extracting translations ..."
     if docker image inspect "$WEBPACK_DEV_IMAGE" &>/dev/null || docker pull "$WEBPACK_DEV_IMAGE" &>/dev/null; then
@@ -133,10 +164,11 @@ if [[ "$SKIP_TRANSLATIONS" == false ]]; then
             -v "$(pwd)/services/web/":/overleaf/services/web \
             -w /overleaf/services/web \
             "$WEBPACK_DEV_IMAGE" \
-            npm run extract-translations
+            yarn run extract-translations
         ok "Translations extracted"
     else
-        warn "Could not pull $WEBPACK_DEV_IMAGE, skipping translations"
+        err "Could not pull $WEBPACK_DEV_IMAGE; use --skip-translations to skip explicitly"
+        exit 1
     fi
 else
     warn "Step 2/5: Skipping translation extraction (--skip-translations)"
@@ -189,9 +221,9 @@ ok "Tagged as $LATEST_TAG"
 
 if [[ "$PUSH" == true ]]; then
     info "Pushing images ..."
-    docker push "$BASE_TAG" 2>/dev/null || warn "Could not push base image"
-    docker push "$APP_TAG"  2>/dev/null || warn "Could not push app image"
-    docker push "$LATEST_TAG" 2>/dev/null || warn "Could not push latest tag"
+    docker push "$BASE_TAG"
+    docker push "$APP_TAG"
+    docker push "$LATEST_TAG"
     ok "Images pushed"
 fi
 

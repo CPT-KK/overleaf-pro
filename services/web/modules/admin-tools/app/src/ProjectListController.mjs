@@ -5,8 +5,11 @@ import { expressify } from '@overleaf/promise-utils'
 import logger from '@overleaf/logger'
 import Metrics from '@overleaf/metrics'
 import mongoose from 'mongoose'
+import SessionManager from '../../../../app/src/Features/Authentication/SessionManager.mjs'
 import ProjectHelper from '../../../../app/src/Features/Project/ProjectHelper.mjs'
+import UserSettingsHelper from '../../../../app/src/Features/Project/UserSettingsHelper.mjs'
 import { OError } from '../../../../app/src/Features/Errors/Errors.js'
+import { User } from '../../../../app/src/models/User.mjs'
 import { Project } from '../../../../app/src/models/Project.mjs'
 import { DeletedProject } from '../../../../app/src/models/DeletedProject.mjs'
 import ProjectDeleter from '../../../../app/src/Features/Project/ProjectDeleter.mjs'
@@ -25,8 +28,13 @@ async function manageProjectsPage(req, res, next) {
     status: prefetchedProjectsBlob ? 'success' : 'error',
   })
 
+  const userId = SessionManager.getLoggedInUserId(req.session)
+  const user = await User.findById(userId, 'ace')
+  const userSettings = await UserSettingsHelper.buildUserSettings(req, res, user)
+
   res.render(Path.resolve(__dirname, '../views/manage-projects-react'), {
     title: 'Manage Projects',
+    userSettings,
     prefetchedProjectsBlob,
   })
 }
@@ -302,12 +310,12 @@ async function untrashProjectForUser(req, res) {
 async function undeleteProject(req, res) {
   const projectId = req.params.project_id
   const { userId } = req.body
-  const undelededProject = await ProjectDeleter.promises.undeleteProject(projectId, { userId })
+  await ProjectDeleter.promises.undeleteProject(projectId, { userId })
   await ProjectDeleter.promises.untrashProject(projectId, userId)
+  // undeleteProject returns nothing, the restored name has a suffix
+  const { name } = await Project.findById(projectId, { name: 1 }).lean()
 
-  return res.json({
-    name: undelededProject.name,
-  })
+  return res.json({ name })
 }
 
 async function purgeDeletedProject(req, res) {

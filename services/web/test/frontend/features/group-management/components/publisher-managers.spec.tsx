@@ -43,14 +43,14 @@ describe('publisher managers', function () {
         cy.get('tr:nth-child(1)').within(() => {
           cy.findByText('john.doe@test.com')
           cy.findByText('John Doe')
-          cy.findByText('15th Jan 2023')
+          cy.findByText('2023-01-15')
           cy.findByText('Invite not yet accepted')
         })
 
         cy.get('tr:nth-child(2)').within(() => {
           cy.findByText('bobby.lapointe@test.com')
           cy.findByText('Bobby Lapointe')
-          cy.findByText('2nd Jan 2023')
+          cy.findByText('2023-01-02')
           cy.findByText('Accepted invite')
         })
       })
@@ -151,7 +151,7 @@ describe('publisher managers', function () {
         cy.get('tr:nth-child(1)').within(() => {
           cy.findByText('bobby.lapointe@test.com')
           cy.findByText('Bobby Lapointe')
-          cy.findByText('2nd Jan 2023')
+          cy.findByText('2023-01-02')
           cy.findByText('Accepted invite')
         })
       })

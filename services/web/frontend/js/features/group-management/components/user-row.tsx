@@ -40,7 +40,7 @@ export default function UserRow({
           <OLFormCheckbox
             autoComplete="off"
             checked={selected}
-            onChange={e => handleSelectUser(e, user)}
+            onChange={(e) => handleSelectUser(e, user)}
             aria-label={t('select_user')}
             data-testid="select-single-checkbox"
           />
