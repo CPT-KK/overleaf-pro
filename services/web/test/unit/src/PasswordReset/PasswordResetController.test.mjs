@@ -18,8 +18,8 @@ describe('PasswordResetController', function () {
         password: ctx.password,
       },
       i18n: {
-        translate() {
-          return '.'
+        translate(key) {
+          return key
         },
       },
       session: {},
@@ -131,9 +131,9 @@ describe('PasswordResetController', function () {
       )
       await ctx.PasswordResetController.requestReset(ctx.req, ctx.res)
       expect(ctx.res.statusCode).to.equal(200)
-      expect(ctx.res.json).toHaveBeenCalledWith(
-        expect.objectContaining({ message: expect.anything() })
-      )
+      expect(ctx.res.json).toHaveBeenCalledWith({
+        message: 'password_reset_email_sent',
+      })
       expect(
         ctx.PasswordResetHandler.promises.generateAndEmailResetToken.lastCall
           .args[0]
@@ -141,39 +141,64 @@ describe('PasswordResetController', function () {
     })
 
     it('should send a 500 if there is an error', async function (ctx) {
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         ctx.PasswordResetHandler.promises.generateAndEmailResetToken.rejects(
           new Error('error')
         )
-        ctx.PasswordResetController.requestReset(ctx.req, ctx.res, error => {
+        ctx.PasswordResetController.requestReset(ctx.req, ctx.res, (error) => {
           expect(error).to.exist
           resolve()
         })
       })
     })
 
-    it("should send a 404 if the email doesn't exist", async function (ctx) {
+    it('should send the same success response if the email does not exist', async function (ctx) {
       ctx.PasswordResetHandler.promises.generateAndEmailResetToken.resolves(
         null
       )
 
       await ctx.PasswordResetController.requestReset(ctx.req, ctx.res)
-      expect(ctx.res.statusCode).to.equal(404)
-      expect(ctx.res.json).toHaveBeenCalledWith(
-        expect.objectContaining({ message: expect.anything() })
-      )
+      expect(ctx.res.statusCode).to.equal(200)
+      expect(ctx.res.json).toHaveBeenCalledWith({
+        message: 'password_reset_email_sent',
+      })
     })
 
-    it('should send a 404 if the email is registered as a secondard email', async function (ctx) {
+    it('should send the same success response for a secondary email', async function (ctx) {
       ctx.PasswordResetHandler.promises.generateAndEmailResetToken.resolves(
         'secondary'
       )
 
       await ctx.PasswordResetController.requestReset(ctx.req, ctx.res)
-      expect(ctx.res.statusCode).to.equal(404)
-      expect(ctx.res.json).toHaveBeenCalledWith(
-        expect.objectContaining({ message: expect.anything() })
+      expect(ctx.res.statusCode).to.equal(200)
+      expect(ctx.res.json).toHaveBeenCalledWith({
+        message: 'password_reset_email_sent',
+      })
+    })
+
+    it('should reject malformed email addresses without requesting a token', async function (ctx) {
+      ctx.req.body.email = 'not-an-email'
+      await ctx.PasswordResetController.requestReset(ctx.req, ctx.res)
+      expect(ctx.res.statusCode).to.equal(400)
+      expect(ctx.res.json).toHaveBeenCalledWith({
+        message: 'must_be_email_address',
+      })
+      expect(
+        ctx.PasswordResetHandler.promises.generateAndEmailResetToken.called
+      ).to.be.false
+    })
+
+    it('should retain the SSO password restriction', async function (ctx) {
+      ctx.PasswordResetHandler.promises.generateAndEmailResetToken.rejects(
+        new Error(
+          'user does not have one or more permissions within change-password'
+        )
       )
+      await ctx.PasswordResetController.requestReset(ctx.req, ctx.res)
+      expect(ctx.res.statusCode).to.equal(403)
+      expect(ctx.res.json).toHaveBeenCalledWith({
+        message: { key: 'no-password-allowed-due-to-sso' },
+      })
     })
 
     it('should normalize the email address', async function (ctx) {
@@ -185,9 +210,9 @@ describe('PasswordResetController', function () {
 
       await ctx.PasswordResetController.requestReset(ctx.req, ctx.res)
       expect(ctx.res.statusCode).to.equal(200)
-      expect(ctx.res.json).toHaveBeenCalledWith(
-        expect.objectContaining({ message: expect.anything() })
-      )
+      expect(ctx.res.json).toHaveBeenCalledWith({
+        message: 'password_reset_email_sent',
+      })
     })
   })
 
@@ -197,8 +222,8 @@ describe('PasswordResetController', function () {
     })
 
     it('should tell the user handler to reset the password', async function (ctx) {
-      await new Promise(resolve => {
-        ctx.res.sendStatus = code => {
+      await new Promise((resolve) => {
+        ctx.res.sendStatus = (code) => {
           code.should.equal(200)
           ctx.PasswordResetHandler.promises.setNewUserPassword
             .calledWith(ctx.token, ctx.password)
@@ -210,9 +235,9 @@ describe('PasswordResetController', function () {
     })
 
     it('should preserve spaces in the password', async function (ctx) {
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         ctx.password = ctx.req.body.password = ' oh! clever! spaces around!   '
-        ctx.res.sendStatus = code => {
+        ctx.res.sendStatus = (code) => {
           code.should.equal(200)
           ctx.PasswordResetHandler.promises.setNewUserPassword.should.have.been.calledWith(
             ctx.token,
@@ -225,17 +250,17 @@ describe('PasswordResetController', function () {
     })
 
     it('should send 404 if the token was not found', async function (ctx) {
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         ctx.PasswordResetHandler.promises.setNewUserPassword.resolves({
           found: false,
           reset: false,
           userId: ctx.user_id,
         })
-        ctx.res.status = code => {
+        ctx.res.status = (code) => {
           code.should.equal(404)
           return ctx.res
         }
-        ctx.res.json = data => {
+        ctx.res.json = (data) => {
           data.message.key.should.equal('token-expired')
           resolve()
         }
@@ -244,17 +269,17 @@ describe('PasswordResetController', function () {
     })
 
     it('should return 500 if not reset', async function (ctx) {
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         ctx.PasswordResetHandler.promises.setNewUserPassword.resolves({
           found: true,
           reset: false,
           userId: ctx.user_id,
         })
-        ctx.res.status = code => {
+        ctx.res.status = (code) => {
           code.should.equal(500)
           return ctx.res
         }
-        ctx.res.json = data => {
+        ctx.res.json = (data) => {
           expect(data.message).to.exist
           resolve()
         }
@@ -263,13 +288,13 @@ describe('PasswordResetController', function () {
     })
 
     it('should return 400 (Bad Request) if there is no password', async function (ctx) {
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         ctx.req.body.password = ''
-        ctx.res.status = code => {
+        ctx.res.status = (code) => {
           code.should.equal(400)
           return ctx.res
         }
-        ctx.res.json = data => {
+        ctx.res.json = (data) => {
           data.message.key.should.equal('invalid-password')
           ctx.PasswordResetHandler.promises.setNewUserPassword.called.should.equal(
             false
@@ -281,13 +306,13 @@ describe('PasswordResetController', function () {
     })
 
     it('should return 400 (Bad Request) if there is no passwordResetToken', async function (ctx) {
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         ctx.req.body.passwordResetToken = ''
-        ctx.res.status = code => {
+        ctx.res.status = (code) => {
           code.should.equal(400)
           return ctx.res
         }
-        ctx.res.json = data => {
+        ctx.res.json = (data) => {
           data.message.key.should.equal('invalid-password')
           ctx.PasswordResetHandler.promises.setNewUserPassword.called.should.equal(
             false
@@ -299,16 +324,16 @@ describe('PasswordResetController', function () {
     })
 
     it('should return 400 (Bad Request) if the password is invalid', async function (ctx) {
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         ctx.req.body.password = 'correct horse battery staple'
         const err = new Error('bad')
         err.name = 'InvalidPasswordError'
         ctx.PasswordResetHandler.promises.setNewUserPassword.rejects(err)
-        ctx.res.status = code => {
+        ctx.res.status = (code) => {
           code.should.equal(400)
           return ctx.res
         }
-        ctx.res.json = data => {
+        ctx.res.json = (data) => {
           data.message.key.should.equal('invalid-password')
           ctx.PasswordResetHandler.promises.setNewUserPassword.called.should.equal(
             true
@@ -320,8 +345,8 @@ describe('PasswordResetController', function () {
     })
 
     it('should clear sessions', async function (ctx) {
-      await new Promise(resolve => {
-        ctx.res.sendStatus = code => {
+      await new Promise((resolve) => {
+        ctx.res.sendStatus = (code) => {
           ctx.UserSessionsManager.promises.removeSessionsFromRedis.callCount.should.equal(
             1
           )
@@ -332,8 +357,8 @@ describe('PasswordResetController', function () {
     })
 
     it('should call removeReconfirmFlag if user.must_reconfirm', async function (ctx) {
-      await new Promise(resolve => {
-        ctx.res.sendStatus = code => {
+      await new Promise((resolve) => {
+        ctx.res.sendStatus = (code) => {
           ctx.UserUpdater.promises.removeReconfirmFlag.callCount.should.equal(1)
           resolve()
         }
@@ -343,15 +368,15 @@ describe('PasswordResetController', function () {
 
     describe('catch errors', function () {
       it('should return 404 for NotFoundError', async function (ctx) {
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
           const anError = new Error('oops')
           anError.name = 'NotFoundError'
           ctx.PasswordResetHandler.promises.setNewUserPassword.rejects(anError)
-          ctx.res.status = code => {
+          ctx.res.status = (code) => {
             code.should.equal(404)
             return ctx.res
           }
-          ctx.res.json = data => {
+          ctx.res.json = (data) => {
             data.message.key.should.equal('token-expired')
             resolve()
           }
@@ -359,15 +384,15 @@ describe('PasswordResetController', function () {
         })
       })
       it('should return 400 for InvalidPasswordError', async function (ctx) {
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
           const anError = new Error('oops')
           anError.name = 'InvalidPasswordError'
           ctx.PasswordResetHandler.promises.setNewUserPassword.rejects(anError)
-          ctx.res.status = code => {
+          ctx.res.status = (code) => {
             code.should.equal(400)
             return ctx.res
           }
-          ctx.res.json = data => {
+          ctx.res.json = (data) => {
             data.message.key.should.equal('invalid-password')
             resolve()
           }
@@ -375,18 +400,18 @@ describe('PasswordResetController', function () {
         })
       })
       it('should return 500 for other errors', async function (ctx) {
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
           const anError = new Error('oops')
           ctx.PasswordResetHandler.promises.setNewUserPassword.rejects(anError)
-          ctx.res.status = code => {
+          ctx.res.status = (code) => {
             code.should.equal(500)
             return ctx.res
           }
-          ctx.res.json = data => {
+          ctx.res.json = (data) => {
             expect(data.message).to.exist
             resolve()
           }
-          ctx.res.sendStatus = code => {
+          ctx.res.sendStatus = (code) => {
             code.should.equal(500)
             resolve()
           }
@@ -406,7 +431,7 @@ describe('PasswordResetController', function () {
       })
 
       it('should login user', async function (ctx) {
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
           ctx.AuthenticationController.finishLogin.callsFake((...args) => {
             expect(args[0]).to.equal(ctx.user)
             resolve()
@@ -425,9 +450,9 @@ describe('PasswordResetController', function () {
       })
 
       it('should set session.resetToken and redirect', async function (ctx) {
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
           ctx.req.session.should.not.have.property('resetToken')
-          ctx.res.redirect = path => {
+          ctx.res.redirect = (path) => {
             path.should.equal('/user/password/set?email=test%40example.com')
             ctx.req.session.resetToken.should.equal(ctx.token)
             resolve()
@@ -449,7 +474,7 @@ describe('PasswordResetController', function () {
 
       it('should redirect to the reset request page with an error message', async function (ctx) {
         await new Promise((resolve, reject) => {
-          ctx.res.redirect = path => {
+          ctx.res.redirect = (path) => {
             path.should.equal('/user/password/reset?error=token_expired')
             ctx.req.session.should.not.have.property('resetToken')
             resolve()
@@ -469,9 +494,9 @@ describe('PasswordResetController', function () {
       })
 
       it('should set session.resetToken and redirect with email', async function (ctx) {
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
           ctx.req.session.should.not.have.property('resetToken')
-          ctx.res.redirect = path => {
+          ctx.res.redirect = (path) => {
             path.should.equal('/user/password/set?email=foo%40bar.com')
             ctx.req.session.resetToken.should.equal(ctx.token)
             resolve()
@@ -488,9 +513,9 @@ describe('PasswordResetController', function () {
       })
 
       it('should set session.resetToken and redirect without email', async function (ctx) {
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
           ctx.req.session.should.not.have.property('resetToken')
-          ctx.res.redirect = path => {
+          ctx.res.redirect = (path) => {
             path.should.equal('/user/password/set')
             ctx.req.session.resetToken.should.equal(ctx.token)
             resolve()
@@ -507,9 +532,9 @@ describe('PasswordResetController', function () {
       })
 
       it('should call next with an error', async function (ctx) {
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
           ctx.req.session.should.not.have.property('resetToken')
-          const next = error => {
+          const next = (error) => {
             expect(error).to.exist
             resolve()
           }
@@ -530,7 +555,7 @@ describe('PasswordResetController', function () {
         })
 
         it('should render the page, passing the reset token', async function (ctx) {
-          await new Promise(resolve => {
+          await new Promise((resolve) => {
             ctx.res.render = (templatePath, options) => {
               options.passwordResetToken.should.equal(ctx.token)
               resolve()
@@ -540,7 +565,7 @@ describe('PasswordResetController', function () {
         })
 
         it('should clear the req.session.resetToken', async function (ctx) {
-          await new Promise(resolve => {
+          await new Promise((resolve) => {
             ctx.res.render = (templatePath, options) => {
               ctx.req.session.should.not.have.property('resetToken')
               resolve()
@@ -552,8 +577,8 @@ describe('PasswordResetController', function () {
 
       describe('without a token in session', function () {
         it('should redirect to the reset request page', async function (ctx) {
-          await new Promise(resolve => {
-            ctx.res.redirect = path => {
+          await new Promise((resolve) => {
+            ctx.res.redirect = (path) => {
               path.should.equal('/user/password/reset')
               ctx.req.session.should.not.have.property('resetToken')
               resolve()
