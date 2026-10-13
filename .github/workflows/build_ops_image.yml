@@ -2,18 +2,12 @@
 # This workflow is used to build overleaf image automatically
 #
 # Published at:
-#     ghcr.io/ayaka-notes/overleaf-pro/ops
+#     ghcr.io/cpt-kk/overleaf-pro/ops
 #
 # ---------------------------------
 
 name: Build Operations Image
 on:
-  push:
-    branches:
-      - server-pro
-  pull_request:
-    branches:
-      - server-pro
   workflow_dispatch:
     inputs:
       no_cache:
@@ -25,7 +19,7 @@ permissions:
   packages: write
 env:
   DOCKER_REGISTRY: ghcr.io
-  IMAGE_NAME: ayaka-notes/overleaf-pro
+  IMAGE_NAME: cpt-kk/overleaf-pro
 
 jobs:
   build-image:
@@ -121,8 +115,8 @@ jobs:
             sharelatex/sharelatex:latest
           annotations: |
             org.opencontainers.image.title=overleaf-pro-ops
-            org.opencontainers.image.description=Overleaf Pro operations image, built from every push to server-pro, maintained by ayaka-notes. For testing only.
-            org.opencontainers.image.source=https://github.com/ayaka-notes/ayakaleaf-pro
+            org.opencontainers.image.description=Overleaf Pro operations image, built manually from the selected branch, maintained by CptKK. For testing only.
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.version=${{ steps.vars.outputs.MONOREPO_REVISION }}
             space.ayaka.overleaf-pro.ops.revision=${{ steps.vars.outputs.MONOREPO_REVISION }}
           # We don't want -${{ github.ref_name }} limit, just more cache hit
@@ -155,8 +149,8 @@ jobs:
       - name: Delete old images
         uses: snok/container-retention-policy@v3.1.0
         with:
-          image-names: overleaf-pro/ops*
+          image-names: overleaf-pro/ops
           cut-off: 7d
-          account: ayaka-notes
+          account: user
           tag-selection: both
-          token: ${{ secrets.ORGTOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}

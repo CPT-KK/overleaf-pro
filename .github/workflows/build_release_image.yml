@@ -3,7 +3,7 @@
 # and push them to GitHub Container Registry
 #
 # Published at:
-#     ghcr.io/ayaka-notes/overleaf-pro/
+#     ghcr.io/cpt-kk/overleaf-pro/
 #
 # ---------------------------------
 
@@ -13,9 +13,13 @@ name: Build Release Image
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   GHCR_REGISTRY: ghcr.io
-  REGISTRY_IMAGE: ghcr.io/ayaka-notes/overleaf-pro
+  REGISTRY_IMAGE: ghcr.io/cpt-kk/overleaf-pro
 
 jobs:
   build:
@@ -29,13 +33,10 @@ jobs:
           runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
     steps:
-      - name: Get latest release branch
-        run: |
-          echo "LATEST_RELEASE_REF=$(git ls-remote --heads --sort='version:refname' https://github.com/ayaka-notes/overleaf-pro.git 'release-v*' | tail -n1 | cut -d/ -f3)" >> $GITHUB_ENV
       - name: "Checkout Repository"
         uses: actions/checkout@v7
         with:
-          ref: ${{ env.LATEST_RELEASE_REF }}
+          ref: ${{ github.sha }}
       - name: Resolve MONOREPO_REVISION
         run: |
           echo "MONOREPO_REVISION=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
@@ -47,9 +48,12 @@ jobs:
       - name: Set release version outputs
         id: set_version
         run: |
-          ref="${{ env.LATEST_RELEASE_REF }}"
-          # ref is like release-v1.2.3, we want to extract 1.2.3
-          version="${ref#release-v}"
+          # Build exactly the manually selected workflow commit, not an older release branch.
+          if [[ "$GITHUB_REF_NAME" == release-v* ]]; then
+            version="${GITHUB_REF_NAME#release-v}"
+          else
+            version="dev-${MONOREPO_REVISION:0:12}"
+          fi
           echo "version=$version" >> $GITHUB_ENV
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Docker meta
@@ -63,7 +67,7 @@ jobs:
         with:
           registry: ${{ env.GHCR_REGISTRY }}
           username: ${{github.actor}}
-          password: ${{ secrets.ORGTOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       
       # --- We need to sync yarn.lock/i18 to ensure consistency ---
       - name: "Sync yarn.lock And Prepare .dockerignore"
@@ -167,7 +171,7 @@ jobs:
         with:
           registry: ${{ env.GHCR_REGISTRY }}
           username: ${{github.actor}}
-          password: ${{ secrets.ORGTOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -197,9 +201,9 @@ jobs:
         with:
           image-names: overleaf-pro
           cut-off: 1s
-          account: ayaka-notes
+          account: user
           tag-selection: untagged
-          token: ${{ secrets.ORGTOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   build_git_bridge:
     strategy:
@@ -212,13 +216,10 @@ jobs:
           runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
     steps:
-      - name: Get latest release branch
-        run: |
-          echo "LATEST_RELEASE_REF=$(git ls-remote --heads --sort='version:refname' https://github.com/ayaka-notes/overleaf-pro.git 'release-v*' | tail -n1 | cut -d/ -f3)" >> $GITHUB_ENV
       - name: "Checkout Repository"
         uses: actions/checkout@v7
         with:
-          ref: ${{ env.LATEST_RELEASE_REF }}
+          ref: ${{ github.sha }}
       - name: Resolve MONOREPO_REVISION
         run: |
           echo "MONOREPO_REVISION=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
@@ -230,9 +231,12 @@ jobs:
       - name: Set release version outputs
         id: set_version
         run: |
-          ref="${{ env.LATEST_RELEASE_REF }}"
-          # ref is like release-v1.2.3, we want to extract 1.2.3
-          version="${ref#release-v}"
+          # Build exactly the manually selected workflow commit, not an older release branch.
+          if [[ "$GITHUB_REF_NAME" == release-v* ]]; then
+            version="${GITHUB_REF_NAME#release-v}"
+          else
+            version="dev-${MONOREPO_REVISION:0:12}"
+          fi
           echo "version=$version" >> $GITHUB_ENV
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Docker meta
@@ -246,7 +250,7 @@ jobs:
         with:
           registry: ${{ env.GHCR_REGISTRY }}
           username: ${{github.actor}}
-          password: ${{ secrets.ORGTOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker (enable containerd image store)
         uses: docker/setup-docker-action@v5
@@ -310,7 +314,7 @@ jobs:
         with:
           registry: ${{ env.GHCR_REGISTRY }}
           username: ${{github.actor}}
-          password: ${{ secrets.ORGTOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -339,6 +343,6 @@ jobs:
         with:
           image-names: overleaf-pro/git-bridge
           cut-off: 1s
-          account: ayaka-notes
+          account: user
           tag-selection: untagged
-          token: ${{ secrets.ORGTOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
