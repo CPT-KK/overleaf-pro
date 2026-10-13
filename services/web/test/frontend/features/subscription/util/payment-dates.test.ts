@@ -8,7 +8,7 @@ describe('payment-dates', function () {
   describe('formatPaymentDate', function () {
     it('formats a date in UTC', function () {
       expect(formatPaymentDate('2025-02-20T12:00:00.000Z')).to.equal(
-        'February 20th, 2025'
+        '2025-02-20'
       )
     })
     it('returns null for missing dates', function () {

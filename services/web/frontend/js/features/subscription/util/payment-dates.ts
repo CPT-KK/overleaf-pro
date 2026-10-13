@@ -4,7 +4,7 @@ export function formatPaymentDate(date: string | null | undefined) {
   if (!date) {
     return null
   }
-  return formatTime(date, 'MMMM Do, YYYY', true)
+  return formatTime(date, 'YYYY-MM-DD', true)
 }
 
 export function formatPaymentDateTime(date: string | null | undefined) {

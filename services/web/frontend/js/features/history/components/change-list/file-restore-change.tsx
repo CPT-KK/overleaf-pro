@@ -13,7 +13,7 @@ function FileRestoreChange({ origin }: Pick<LoadedUpdate['meta'], 'origin'>) {
     <div className="history-version-restore-file">
       {t('file_action_restored', {
         fileName: origin.path,
-        date: formatTime(origin.timestamp, 'Do MMMM, h:mm a'),
+        date: formatTime(origin.timestamp, 'YYYY-MM-DD HH:mm'),
       })}
     </div>
   )

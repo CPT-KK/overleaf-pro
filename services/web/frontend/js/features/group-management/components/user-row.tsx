@@ -40,7 +40,7 @@ export default function UserRow({
           <OLFormCheckbox
             autoComplete="off"
             checked={selected}
-            onChange={e => handleSelectUser(e, user)}
+            onChange={(e) => handleSelectUser(e, user)}
             aria-label={t('select_user')}
             data-testid="select-single-checkbox"
           />
@@ -52,7 +52,7 @@ export default function UserRow({
       </td>
       <td className="cell-last-active">
         {user.last_active_at
-          ? moment(user.last_active_at).format('Do MMM YYYY')
+          ? moment(user.last_active_at).utcOffset(8).format('YYYY-MM-DD')
           : 'N/A'}
       </td>
       <td className="cell-accepted-invite">

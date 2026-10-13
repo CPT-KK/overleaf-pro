@@ -158,9 +158,9 @@ function HistoryVersion({
               className="history-version-metadata-time"
               data-testid="history-version-metadata-time"
             >
-              <b>{formatTime(update.meta.end_ts, 'Do MMMM, h:mm a')}</b>
+              <b>{formatTime(update.meta.end_ts, 'YYYY-MM-DD HH:mm')}</b>
             </time>
-            {orderedLabels.map(label => (
+            {orderedLabels.map((label) => (
               <TagTooltip
                 key={label.id}
                 showTooltip

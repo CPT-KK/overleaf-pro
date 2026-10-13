@@ -92,7 +92,7 @@ describe('group members, with managed users', function () {
         cy.get('tr:nth-child(1)').within(() => {
           cy.contains('john.doe@test.com')
           cy.contains('John Doe')
-          cy.contains('15th Jan 2023')
+          cy.contains('2023-01-15')
           cy.get('.visually-hidden').contains('Pending invite')
 
           cy.findByTestId('badge-pending-invite').should(
@@ -105,7 +105,7 @@ describe('group members, with managed users', function () {
         cy.get('tr:nth-child(2)').within(() => {
           cy.contains('bobby.lapointe@test.com')
           cy.contains('Bobby Lapointe')
-          cy.contains('2nd Jan 2023')
+          cy.contains('2023-01-02')
           cy.findByTestId('badge-pending-invite').should('not.exist')
           cy.get('.visually-hidden').contains('Not managed')
         })
@@ -215,7 +215,7 @@ describe('group members, with managed users', function () {
         cy.get('tr:nth-child(1)').within(() => {
           cy.contains('bobby.lapointe@test.com')
           cy.contains('Bobby Lapointe')
-          cy.contains('2nd Jan 2023')
+          cy.contains('2023-01-02')
         })
       })
   })

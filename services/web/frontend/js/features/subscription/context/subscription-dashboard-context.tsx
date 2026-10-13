@@ -264,9 +264,9 @@ export function SubscriptionDashboardProvider({
 
   const updateManagedInstitution = useCallback(
     (institution: ManagedInstitution) => {
-      setManagedInstitutions(institutions => {
+      setManagedInstitutions((institutions) => {
         return [
-          ...(institutions || []).map(i =>
+          ...(institutions || []).map((i) =>
             i.v1Id === institution.v1Id ? institution : i
           ),
         ]

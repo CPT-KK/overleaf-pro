@@ -293,7 +293,7 @@ describe('change list', function () {
         .within(() => {
           cy.findByTestId('history-version-metadata-time').should(
             'have.text',
-            formatTime(updates.updates[0].meta.end_ts, 'Do MMMM, h:mm a')
+            formatTime(updates.updates[0].meta.end_ts, 'YYYY-MM-DD HH:mm')
           )
         })
     })

@@ -17,11 +17,11 @@ export default function ToolbarDatetime({ selection }: ToolbarDatetimeProps) {
           values={{
             startTime: formatTime(
               selection.updateRange?.fromVTimestamp,
-              'Do MMMM · h:mm a'
+              'YYYY-MM-DD HH:mm'
             ),
             endTime: formatTime(
               selection.updateRange?.toVTimestamp,
-              'Do MMMM · h:mm a'
+              'YYYY-MM-DD HH:mm'
             ),
           }}
           shouldUnescape
@@ -35,7 +35,7 @@ export default function ToolbarDatetime({ selection }: ToolbarDatetimeProps) {
           values={{
             endTime: formatTime(
               selection.updateRange?.toVTimestamp,
-              'Do MMMM · h:mm a'
+              'YYYY-MM-DD HH:mm'
             ),
           }}
           shouldUnescape
