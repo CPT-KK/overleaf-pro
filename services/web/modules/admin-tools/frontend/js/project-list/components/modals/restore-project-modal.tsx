@@ -33,7 +33,7 @@ function RestoreProjectModal({
     <ProjectsActionModal
       action="restore"
       actionHandler={actionHandler}
-      title={t('restore_projects')}
+      title={t('restore')}
       showModal={showModal}
       handleCloseModal={handleCloseModal}
       projects={projects}

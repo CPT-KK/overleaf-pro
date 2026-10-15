@@ -65,7 +65,7 @@ export function UsersTab({
           <div
             role="toolbar"
             className="users-toolbar"
-            aria-label={t('users')}
+            aria-label={t('user_management')}
           >
             <UsersDropdown />
             <SortByDropdown />

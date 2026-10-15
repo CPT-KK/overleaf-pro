@@ -33,7 +33,7 @@ function RestoreUserModal({
     <UsersActionModal
       action="restore"
       actionHandler={actionHandler}
-      title={t('restore_accounts')}
+      title={t('restore')}
       showModal={showModal}
       handleCloseModal={handleCloseModal}
       users={users}

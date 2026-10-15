@@ -35,7 +35,7 @@ export function ProjectListDsNav() {
   } = useProjectListContext()
   const { getUserNameById } = useUserIdentityContext()
 
-  const userName = projectsOwnerId ? getUserNameById(projectsOwnerId) : t('all_users')
+  const userName = projectsOwnerId ? getUserNameById(projectsOwnerId) : t('all')
   const tableTopArea = (
     <div className="pt-2 pb-3 d-md-none d-flex gap-3">
       <div className="pt-1 fs-5 fw-bold" translate="no">

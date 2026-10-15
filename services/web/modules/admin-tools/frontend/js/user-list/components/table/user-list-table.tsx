@@ -53,12 +53,12 @@ function UserListTable() {
 
   return (
     <OLTable className="user-dash-table" container={false} hover>
-      <caption className="visually-hidden">{t('users_list')}</caption>
+      <caption className="visually-hidden">{t('user_management')}</caption>
       <thead className="visually-hidden-max-md">
         <tr>
           <th
             className="dash-cell-checkbox d-none d-md-table-cell"
-            aria-label={t('select_users')}
+            aria-label={t('select_all')}
           >
             <OLFormCheckbox
               name="select_all_users"
@@ -69,7 +69,7 @@ function UserListTable() {
                 visibleUsers.length - selfVisibleCount !== 0
               }
               disabled={visibleUsers.length - selfVisibleCount === 0}
-              aria-label={t('select_all_users')}
+              aria-label={t('select_all')}
               inputRef={checkAllRef}
             />
           </th>

@@ -32,7 +32,7 @@ function SidebarDsNav() {
     >
       <nav
         className="flex-grow flex-shrink"
-        aria-label={t('user_categories')}
+        aria-label={t('filters')}
       >
         <CreateAccountButton
           id="create-account-button-sidebar"

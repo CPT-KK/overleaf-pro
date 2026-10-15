@@ -36,7 +36,7 @@ function UserBasicInfoTab({ userData, handleTextChange, handleCheckboxChange, al
   return (
     <>
       <OLFormGroup controlId="id-">
-        <OLFormLabel>{t('ID')}</OLFormLabel>
+        <OLFormLabel>{t('id')}</OLFormLabel>
         <OLFormControl
           ref={autoFocusedRef}
           maxLength="128"

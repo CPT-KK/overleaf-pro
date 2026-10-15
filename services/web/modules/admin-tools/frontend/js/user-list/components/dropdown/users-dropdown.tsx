@@ -54,7 +54,7 @@ function UsersDropdown() {
         id="users-types-dropdown-toggle-btn"
         className="ps-0 mb-0 btn-transparent h3"
         size="lg"
-        aria-label={t('filter_users')}
+        aria-label={t('filters')}
       >
         <span className="text-truncate" aria-hidden>
           {title}

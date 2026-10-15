@@ -14,16 +14,16 @@ function UserTools() {
   const { filter, selectedUsers } = useUserListContext()
 
   return (
-    <OLButtonToolbar aria-label={t('toolbar_selected_users')}>
+    <OLButtonToolbar aria-label={t('user_management')}>
 
       {(filter === 'deleted') && (
-        <OLButtonGroup aria-label={t('toolbar_selected_users_restore')}>
+        <OLButtonGroup aria-label={t('restore')}>
           <RestoreUsersButton />
         </OLButtonGroup>
       )}
 
       {(filter !== 'deleted') && (
-      <OLButtonGroup aria-label={t('toolbar_selected_users_suspend_status')}>
+      <OLButtonGroup aria-label={t('disable')}>
          {filter !== 'suspended' && <FlagUsersButton action={'suspend'} />}
          <FlagUsersButton action={'resume'} />
          {filter !== 'suspended' && <SendRegEmailsButton />}
@@ -31,20 +31,20 @@ function UserTools() {
       )}
 
       {(filter !== 'deleted') && (
-        <OLButtonGroup aria-label={t('toolbar_selected_users_admin_status')}>
+        <OLButtonGroup aria-label={t('admin')}>
           {(filter !== 'admin' && filter !== 'suspended') && <FlagUsersButton action={'set_admin'} />}
           <FlagUsersButton action={'unset_admin'} />
         </OLButtonGroup>
       )}
 
       {(filter !== 'deleted') && (
-        <OLButtonGroup aria-label={t('toolbar_selected_users_remove')}>
+        <OLButtonGroup aria-label={t('delete')}>
           <DeleteUsersButton />
         </OLButtonGroup>
       )}
 
       {(filter === 'deleted') && (
-        <OLButtonGroup aria-label={t('toolbar_selected_users_purge')}>
+        <OLButtonGroup aria-label={t('delete_permanently')}>
           <PurgeUsersButton />
         </OLButtonGroup>
       )}

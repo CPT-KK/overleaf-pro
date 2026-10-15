@@ -34,12 +34,12 @@ function PurgeProjectModal({
     <ProjectsActionModal
       action="purge"
       actionHandler={actionHandler}
-      title={t('permanently_delete_projects')}
+      title={t('delete_permanently')}
       showModal={showModal}
       handleCloseModal={handleCloseModal}
       projects={projects}
     >
-      <p>{t('about_to_permanently_delete_projects')}</p>
+      <p>{t('about_to_delete_projects')}</p>
       <ProjectsList projects={projects} projectsToDisplay={projectsToDisplay} />
       <Notification
         content={t('this_action_cannot_be_undone')}

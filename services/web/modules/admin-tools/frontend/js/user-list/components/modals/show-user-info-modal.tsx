@@ -95,7 +95,7 @@ function ShowUserInfoModal({
           <>
             <Card.Header>{t('Account')}</Card.Header>
             <Body>
-              <InfoRow label={t('ID')} value={user.id} />
+              <InfoRow label={t('id')} value={user.id} />
               <InfoRow label={t('email_address')} value={user.email} />
               <InfoRow label={t('first_name')} value={user.firstName || '—'} />
               <InfoRow label={t('last_name')} value={user.lastName || '—'} />

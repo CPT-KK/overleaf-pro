@@ -39,7 +39,7 @@ function ProjectTools() {
             <RestoreProjectsButton />
           </OLButtonGroup>
           <OLButtonGroup
-            aria-label={t('toolbar_selected_projects_purge')}
+            aria-label={t('delete_permanently')}
           >
             <PurgeProjectsButton />
           </OLButtonGroup>

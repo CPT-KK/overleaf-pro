@@ -34,7 +34,7 @@ function PurgeUserModal({
     <UsersActionModal
       action="purge"
       actionHandler={actionHandler}
-      title={t('permanently_delete_accounts')}
+      title={t('delete_permanently')}
       showModal={showModal}
       handleCloseModal={handleCloseModal}
       users={users}

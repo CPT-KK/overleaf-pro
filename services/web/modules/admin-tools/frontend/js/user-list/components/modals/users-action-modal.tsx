@@ -55,6 +55,9 @@ function UsersActionModal({
     action === 'info' ? t('close') :
     action === 'set_admin' ? "Grant admin" :
     action === 'unset_admin' ? "Revoke admin" :
+    action === 'suspend' ? t('disable') :
+    action === 'resume' ? t('enable') :
+    action === 'purge' ? t('delete_permanently') :
     t(action)
 
   async function handleActionForUsers(users: Array<User>, options?: any) {

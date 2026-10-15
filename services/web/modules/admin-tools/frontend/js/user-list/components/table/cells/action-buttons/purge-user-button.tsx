@@ -15,7 +15,7 @@ type PurgeUserButtonProps = {
 
 function PurgeUserButton({ user, children }: PurgeUserButtonProps) {
   const { t } = useTranslation()
-  const text = t('purge')
+  const text = t('delete_permanently')
   const [showModal, setShowModal] = useState(false)
   const isMounted = useIsMounted()
 

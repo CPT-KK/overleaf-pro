@@ -127,7 +127,7 @@ export function UserListProvider({ children }: UserListProviderProps) {
       suspended: t('disabled'),
       inactive: t('inactive'),
       deleted: t('deleted_user'),
-      local: t('local'),
+      local: t('password'),
       ldap: t('ldap'),
       saml: t('saml'),
       oidc: t('oidc'),

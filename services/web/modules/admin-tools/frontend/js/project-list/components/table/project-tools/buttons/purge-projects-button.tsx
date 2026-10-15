@@ -34,7 +34,7 @@ function PurgeProjectsButton() {
   return (
     <>
       <OLButton variant="danger" onClick={handleOpenModal}>
-        {t('purge')}
+        {t('delete_permanently')}
       </OLButton>
       <PurgeProjectModal
         projects={selectedProjects}

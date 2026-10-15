@@ -41,7 +41,7 @@ function TrashProjectModal({
       <p>{t('about_to_trash_projects')}</p>
       <ProjectsList projects={projects} projectsToDisplay={projectsToDisplay} />
       <p>
-        {t('trashing_projects_wont_affect_user_collaborators')}
+        {t('trashing_projects_wont_affect_collaborators')}
       </p>
     </ProjectsActionModal>
   )

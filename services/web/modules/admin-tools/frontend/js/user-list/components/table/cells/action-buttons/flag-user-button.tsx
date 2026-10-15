@@ -18,7 +18,8 @@ function FlagUserButton({ user, action, children }: FlagUserButtonProps) {
   const { t } = useTranslation()
   const [showModal, setShowModal] = useState(false)
   const isMounted = useIsMounted()
-  const text = t(action)
+  const text =
+    action === 'suspend' ? t('disable') : action === 'resume' ? t('enable') : t(action)
 
   const handleOpenModal = useCallback(() => {
     setShowModal(true)

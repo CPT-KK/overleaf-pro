@@ -52,6 +52,7 @@ function ProjectsActionModal({
 
   const actionLabel =
     action === 'transfer' ? t('change_owner') :
+    action === 'purge' ? t('delete_permanently') :
     t(action)
 
   async function handleActionForProjects(projects: Array<Project>, options?: any) {

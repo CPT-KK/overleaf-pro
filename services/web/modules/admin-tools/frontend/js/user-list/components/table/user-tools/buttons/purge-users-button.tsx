@@ -31,7 +31,7 @@ function PurgeUsersButton() {
   return (
     <>
       <OLButton variant="danger" onClick={handleOpenModal}>
-        {t('purge')}
+        {t('delete_permanently')}
       </OLButton>
 
       <PurgeUserModal
