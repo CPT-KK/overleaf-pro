@@ -134,7 +134,7 @@ async function oauth2Callback(req, res) {
   }
 
   try {
-    await TokenManager.saveUserToken(userId, token)
+    await TokenManager.linkUserToken(userId, token)
   } catch (err) {
     const info = OError.getFullInfo(err)
     const errStatus  = info?.status || 500

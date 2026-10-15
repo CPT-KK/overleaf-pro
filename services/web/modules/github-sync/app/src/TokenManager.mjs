@@ -41,11 +41,20 @@ async function getUserToken(userId) {
 
 async function saveUserToken(userId, accessToken) {
   const tokenEncrypted = await encryptAccessToken(accessToken)
-  await GitHubSyncUserCredentials.findOneAndUpdate(
+  const previous = await GitHubSyncUserCredentials.findOneAndUpdate(
     normalizeQuery({ userId }),
     { $set: { github: tokenEncrypted } },
     { upsert: true }
   )
+  // linking again (e.g. another account) replaces the token: revoke the old
+  // one, fire-and-forget like removeUserToken
+  if (previous) {
+    decryptAccessToken(previous.github)
+      .then(token => GitHubApiClient.revokeToken(token))
+      .catch(err => {
+        logger.warn({ err, userId }, 'failed to revoke replaced user token')
+      })
+  }
 }
 
 // Try to revoke user's token, then remove it

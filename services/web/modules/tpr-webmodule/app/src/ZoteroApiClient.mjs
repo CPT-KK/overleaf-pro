@@ -330,10 +330,22 @@ async function storeCredentials(userId, apiKey, zoteroUserId) {
     apiKey,
     zoteroUserId: String(zoteroUserId),
   })
-  await User.updateOne(
+  const previous = await User.findOneAndUpdate(
     { _id: userId },
-    { $set: { 'refProviders.zotero': { apiKeyEncrypted } } }
+    { $set: { 'refProviders.zotero': { apiKeyEncrypted } } },
+    { projection: { 'refProviders.zotero': 1 } }
   ).exec()
+  // linking again (e.g. another account) replaces the key: revoke the old
+  // one, fire-and-forget
+  const previousEncrypted = previous?.refProviders?.zotero?.apiKeyEncrypted
+  if (previousEncrypted) {
+    AccessTokenEncryptor.promises
+      .decryptToJson(previousEncrypted)
+      .then(old => revokeApiKey(old.apiKey))
+      .catch(err => {
+        logger.warn({ err, userId }, 'failed to revoke replaced Zotero API key')
+      })
+  }
 }
 
 /**

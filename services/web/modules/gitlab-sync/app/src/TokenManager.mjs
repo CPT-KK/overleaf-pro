@@ -87,11 +87,24 @@ async function getUserToken(userId) {
 // credentials: { accessToken, refreshToken, expiresAt }
 async function saveUserToken(userId, credentials) {
   const credentialsEncrypted = await encryptCredentials(credentials)
-  await GitLabSyncUserCredentials.findOneAndUpdate(
+  return await GitLabSyncUserCredentials.findOneAndUpdate(
     normalizeQuery({ userId }),
     { $set: { gitlab: credentialsEncrypted } },
     { upsert: true }
   )
+}
+
+// Linking again (e.g. another account) replaces the credentials: revoke the
+// old token, fire-and-forget like removeUserToken
+async function linkUserToken(userId, credentials) {
+  const previous = await saveUserToken(userId, credentials)
+  if (previous) {
+    decryptCredentials(previous.gitlab)
+      .then(old => GitLabApiClient.revokeToken(old.accessToken))
+      .catch(err => {
+        logger.warn({ err, userId }, 'failed to revoke replaced user token')
+      })
+  }
 }
 
 // Try to revoke user's token, then remove it
@@ -114,6 +127,7 @@ async function removeUserToken(userId) {
 
 export default {
   saveUserToken,
+  linkUserToken,
   getUserToken,
   removeUserToken
 }
