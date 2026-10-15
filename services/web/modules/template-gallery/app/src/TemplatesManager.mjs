@@ -102,8 +102,8 @@ const TemplatesManager = {
     try {
       await ProjectOptionsHandler.setImageName(projectId, imageName)
     } catch {
+      // the project keeps the default image it was created with
       logger.warn({ imageName: imageName }, 'not available')
-      await ProjectOptionsHandler.setImageName(projectId, settings.currentImageName)
     }
   },
 

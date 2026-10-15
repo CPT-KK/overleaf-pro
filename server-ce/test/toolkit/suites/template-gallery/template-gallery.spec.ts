@@ -201,6 +201,30 @@ describe('creating a project from a template', function () {
       .should('have.text', 'XeLaTeX')
   })
 
+  it('uses the default TeX Live image when the one of the template is no longer offered', function () {
+    login(user)
+    getTemplate(templateId).then(template => {
+      const query = new URLSearchParams({
+        id: templateId,
+        version: String(template.version),
+        name: template.name,
+        compiler: template.compiler,
+        mainFile: template.mainFile,
+        language: template.language,
+        // removed from ALL_TEX_LIVE_DOCKER_IMAGES since it was published
+        imageName: 'texlive-basic:2017.1',
+      })
+      cy.visit(`/project/new/template/?${query}`)
+    })
+    cy.url({ timeout: 60_000 }).should('match', /\/project\/[0-9a-f]{24}$/)
+    cy.findByRole('button', { name: 'Settings' }).click()
+    cy.findByRole('dialog').findByRole('tab', { name: 'Compiler' }).click()
+    cy.findByRole('dialog')
+      .findByRole('combobox', { name: 'TeX Live version' })
+      .find('option:selected')
+      .should('have.text', '2026.1')
+  })
+
   it('gives two independent projects when opened twice', function () {
     login(user)
     openAsTemplate(templateId).then(first => {

@@ -43,9 +43,11 @@ const DockerRunner = {
       return callback(new Error('image not allowed'))
     }
 
-    if (Settings.texliveImageNameOveride != null) {
-      const img = image.split('/')
-      image = `${Settings.texliveImageNameOveride}/${img[2]}`
+    if (
+      Settings.texliveImageNameOveride != null &&
+      !['conversions', 'png2pdf'].includes(compileGroup)
+    ) {
+      image = `${Settings.texliveImageNameOveride}/${Path.basename(image)}`
     }
 
     if (compileGroup === 'synctex-output') {
@@ -56,6 +58,14 @@ const DockerRunner = {
       directory = Path.join(
         Settings.path.sandboxedCompilesHostDirOutput,
         ...directory.split('/').slice(-3)
+      )
+    } else if (compileGroup === 'png2pdf') {
+      // In:   directory = '/overleaf/services/clsi/cache/projectId'
+      //  sandboxedCompilesHostDirCache = '/host/cache'
+      // Out:                    directory = '/host/cache/projectId'
+      directory = Path.join(
+        Settings.path.sandboxedCompilesHostDirCache,
+        Path.basename(directory)
       )
     } else {
       // In:   directory = '/overleaf/services/clsi/compiles/projectId-userId'
