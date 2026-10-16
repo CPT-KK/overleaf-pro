@@ -208,6 +208,8 @@ describe('MCP server of a project', function () {
           (t: { accessTokenPartial: string }) =>
             token.startsWith(t.accessTokenPartial)
         )
+        // The MCP request shows as the last use on the settings page
+        expect(created.lastUsedAt).to.be.a('string')
         requestWithCsrf('DELETE', `/oauth/personal-access-tokens/${created._id}`)
           .its('status')
           .should('be.lessThan', 400)

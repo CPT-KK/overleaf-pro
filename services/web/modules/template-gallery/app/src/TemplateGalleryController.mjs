@@ -5,7 +5,7 @@ import Errors from '../../../../app/src/Features/Errors/Errors.js'
 import SessionManager from '../../../../app/src/Features/Authentication/SessionManager.mjs'
 import TemplateGalleryManager from'./TemplateGalleryManager.mjs'
 import { getUserName } from './TemplateGalleryHelper.mjs'
-import { TemplateNameConflictError, RecompileRequiredError } from './TemplateErrors.mjs'
+import { TemplateNameConflictError, RecompileRequiredError, MainFileRequiredError } from './TemplateErrors.mjs'
 import Settings from '@overleaf/settings'
 import { InvalidParamsError, InvalidRequestError, parseReq, z, zz } from '../../../../app/src/infrastructure/Validation.mjs'
 
@@ -58,7 +58,12 @@ async function createTemplateFromProject(req, res, next) {
     const mainMessage = "Failed to publish as a template."
     if (error instanceof RecompileRequiredError) {
       return res.status(error.info?.status || 400).json({
-        message: `${mainMessage} ${t('try_recompile_project')}`
+        message: `${mainMessage} ${t('recompile_from_scratch')}`
+      })
+    }
+    if (error instanceof MainFileRequiredError) {
+      return res.status(error.info.status).json({
+        message: `${mainMessage} ${t('please_set_main_file')}`
       })
     }
     return res.status(400).json({ message: mainMessage })

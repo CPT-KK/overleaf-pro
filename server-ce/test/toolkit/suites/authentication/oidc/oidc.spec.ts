@@ -5,6 +5,7 @@ import {
   idpEmail,
   isSiteAdmin,
   resetAuthentikUsers,
+  setAuthentikEmail,
   setAuthentikGroup,
   setAuthentikName,
   ssoLogin,
@@ -134,6 +135,22 @@ describe('linking OIDC to an account', function () {
     // The link flow returns to the settings page, still logged in as carol
     cy.url({ timeout: 30_000 }).should('contain', '/user/settings')
     currentUser().its('email').should('equal', idpEmail('carol'))
+  })
+
+  it('links the account when the IdP sends its email in other case', function () {
+    login(idpEmail('carol'), carolPassword)
+    unlink()
+
+    // The local account is lowercase, the IdP keeps the case it was given
+    setAuthentikEmail('carol', 'Carol@ayakaleaf.test')
+    oidcLogin('carol')
+    currentUser().its('email').should('equal', idpEmail('carol'))
+    isSiteAdmin().should('equal', true)
+  })
+
+  // Also when a case fails, so later logins of carol are not affected
+  after(function () {
+    setAuthentikEmail('carol', idpEmail('carol'))
   })
 })
 

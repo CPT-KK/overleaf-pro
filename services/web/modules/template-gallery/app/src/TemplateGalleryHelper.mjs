@@ -11,7 +11,7 @@ import ClsiManager from '../../../../app/src/Features/Compile/ClsiManager.mjs'
 import UserGetter from '../../../../app/src/Features/User/UserGetter.mjs'
 import { fetchStreamWithResponse } from '@overleaf/fetch-utils'
 import { Template } from './models/Template.mjs'
-import { RecompileRequiredError } from './TemplateErrors.mjs'
+import { RecompileRequiredError, MainFileRequiredError } from './TemplateErrors.mjs'
 import { cleanHtml }  from './CleanHtml.mjs'
 
 const TIMEOUT = 30000
@@ -110,6 +110,7 @@ export async function generateTemplateData(projectId, {
     })
 
     const { path } = await ProjectLocator.promises.findRootDoc({ project })
+    if (!path) throw new MainFileRequiredError()
     const mainFile = path.fileSystem.replace(/^\/+/, '')
     const template = {
       name,

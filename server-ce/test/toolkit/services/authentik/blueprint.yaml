@@ -112,6 +112,14 @@ entries:
       provider: !KeyOf oidc-provider
 
   # ---------- SAML ----------
+  # The managed name mapping, except that a custom `name` attribute overrides
+  # it like on the LDAP outpost; a list is sent as several AttributeValues.
+  - model: authentik_providers_saml.samlpropertymapping
+    id: saml-name-mapping
+    identifiers: { name: ayakaleaf SAML name }
+    attrs:
+      saml_name: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name
+      expression: return request.user.attributes.get("name", request.user.name)
   - model: authentik_providers_saml.samlprovider
     id: saml-provider
     identifiers: { name: ayakaleaf-saml }
@@ -129,7 +137,7 @@ entries:
       name_id_mapping: !Find [authentik_providers_saml.samlpropertymapping, [managed, goauthentik.io/providers/saml/email]]
       property_mappings:
         - !Find [authentik_providers_saml.samlpropertymapping, [managed, goauthentik.io/providers/saml/email]]
-        - !Find [authentik_providers_saml.samlpropertymapping, [managed, goauthentik.io/providers/saml/name]]
+        - !KeyOf saml-name-mapping
         - !Find [authentik_providers_saml.samlpropertymapping, [managed, goauthentik.io/providers/saml/username]]
         - !Find [authentik_providers_saml.samlpropertymapping, [managed, goauthentik.io/providers/saml/uid]]
         - !Find [authentik_providers_saml.samlpropertymapping, [managed, goauthentik.io/providers/saml/groups]]

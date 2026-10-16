@@ -34,9 +34,15 @@ function splitFullName(fullName) {
   return [firstNames, lastName];
 }
 
+// ldapjs and node-saml return an attribute with several values as an array
+function firstValue(value) {
+  return Array.isArray(value) ? value[0] : value
+}
+
 export {
   readFilesContentFromEnv,
   numFromEnv,
   boolFromEnv,
   splitFullName,
+  firstValue,
 }

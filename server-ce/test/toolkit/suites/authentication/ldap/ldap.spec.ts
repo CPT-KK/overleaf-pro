@@ -4,6 +4,7 @@ import {
   isSiteAdmin,
   ldapLogin,
   resetAuthentikUsers,
+  setAuthentikAttributes,
   setAuthentikGroup,
   setAuthentikName,
 } from '../../../../helpers/auth'
@@ -116,6 +117,31 @@ describe('LDAP profile and logout', function () {
     setAuthentikName('alice', 'Alice Admin')
     loginAs('alice')
     currentUser().its('first_name').should('equal', 'Alice')
+  })
+
+  it('takes the first value of a name attribute with several values', function () {
+    // Like cn in inetOrgPerson, the name attribute may hold several values
+    setAuthentikAttributes('alice', { name: ['Ally Renamed', 'Alice Admin'] })
+    loginAs('alice')
+    currentUser().then(user => {
+      expect([user.first_name, user.last_name]).to.deep.equal(['Ally', 'Renamed'])
+    })
+    setAuthentikAttributes('alice', {})
+  })
+
+  it('lists directory contacts when one of them has several names', function () {
+    setAuthentikAttributes('alice', { name: ['Ally Renamed', 'Alice Admin'] })
+    loginAs('bob')
+    cy.request('/user/contacts').then(response => {
+      const alice = response.body.contacts.find(
+        (contact: { email: string }) => contact.email === idpEmail('alice')
+      )
+      expect([alice.first_name, alice.last_name]).to.deep.equal([
+        'Ally',
+        'Renamed',
+      ])
+    })
+    setAuthentikAttributes('alice', {})
   })
 
   it('logs out and requires the password again', function () {

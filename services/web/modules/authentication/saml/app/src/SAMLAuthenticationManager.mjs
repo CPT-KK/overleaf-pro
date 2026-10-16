@@ -4,6 +4,7 @@ import UserCreator from '../../../../../app/src/Features/User/UserCreator.mjs'
 import { ParallelLoginError } from '../../../../../app/src/Features/Authentication/AuthenticationErrors.mjs'
 import SAMLIdentityManager from '../../../../../app/src/Features/User/SAMLIdentityManager.mjs'
 import { User } from '../../../../../app/src/models/User.mjs'
+import { firstValue } from '../../../utils.mjs'
 
 const SAMLAuthenticationManager = {
   async findOrCreateUser(profile, auditLog) {
@@ -20,8 +21,8 @@ const SAMLAuthenticationManager = {
     const email = Array.isArray(profile[attEmail])
                     ? profile[attEmail][0].toLowerCase()
                     : profile[attEmail].toLowerCase()
-    const firstName = attFirstName ? profile[attFirstName] : ""
-    const lastName  = attLastName  ? profile[attLastName] : email
+    const firstName = attFirstName ? firstValue(profile[attFirstName]) : ""
+    const lastName  = attLastName  ? firstValue(profile[attLastName]) : email
     let isAdmin = false
     if (attAdmin && valAdmin) {
       isAdmin = (Array.isArray(profile[attAdmin]) ? profile[attAdmin].includes(valAdmin) :

@@ -5,6 +5,7 @@ import {
   idpEmail,
   isSiteAdmin,
   resetAuthentikUsers,
+  setAuthentikAttributes,
   setAuthentikGroup,
   setAuthentikName,
   ssoLogin,
@@ -108,6 +109,13 @@ describe('SAML profile and logout', function () {
     setAuthentikName('alice', 'Alice Admin')
     samlLogin('alice')
     currentUser().its('first_name').should('equal', 'Alice Admin')
+  })
+
+  it('takes the first value of a name attribute with several values', function () {
+    setAuthentikAttributes('alice', { name: ['Ally Renamed', 'Alice Admin'] })
+    samlLogin('alice')
+    currentUser().its('first_name').should('equal', 'Ally Renamed')
+    setAuthentikAttributes('alice', {})
   })
 
   it('logs out through the IdP and requires a fresh SSO login', function () {

@@ -3,7 +3,7 @@ import Settings from '@overleaf/settings'
 import UserCreator from '../../../../../app/src/Features/User/UserCreator.mjs'
 import { ParallelLoginError } from '../../../../../app/src/Features/Authentication/AuthenticationErrors.mjs'
 import { User } from '../../../../../app/src/models/User.mjs'
-import { splitFullName } from '../../../utils.mjs'
+import { splitFullName, firstValue } from '../../../utils.mjs'
 
 const LDAPAuthenticationManager = {
   async findOrCreateUser(profile, auditLog) {
@@ -23,10 +23,10 @@ const LDAPAuthenticationManager = {
                     : profile[attEmail].toLowerCase()
     let nameParts = ["",""]
     if ((!attFirstName || !attLastName) && attName) {
-      nameParts = splitFullName(profile[attName] || "")
+      nameParts = splitFullName(firstValue(profile[attName]) || "")
     }
-    const firstName = attFirstName ? (profile[attFirstName] || "") : nameParts[0]
-    let   lastName  = attLastName  ? (profile[attLastName]  || "") : nameParts[1]
+    const firstName = attFirstName ? (firstValue(profile[attFirstName]) || "") : nameParts[0]
+    let   lastName  = attLastName  ? (firstValue(profile[attLastName])  || "") : nameParts[1]
     if (!firstName && !lastName) lastName = email
     let isAdmin = false
     if( attAdmin && valAdmin ) {

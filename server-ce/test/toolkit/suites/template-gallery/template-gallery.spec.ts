@@ -1,8 +1,10 @@
 import { v4 as uuid } from 'uuid'
 import { login } from '../../../helpers/login'
 import {
+  compileProject,
   createProject,
   openNewProject,
+  openProject,
   projectName,
 } from '../../../helpers/project'
 import { postWithCsrf, requestWithCsrf } from '../../../helpers/request'
@@ -144,6 +146,44 @@ describe('publishing a template', function () {
       'href',
       `/project/${projectId}`
     )
+  })
+
+  it('asks to recompile when the PDF of the build is gone', function () {
+    login(ADMIN_EMAIL)
+    createProject(projectName('NoPdf')).then(id => {
+      publishTemplate(id, {
+        name: projectName('NoPdf'),
+        build: '0000000000000-0000000000000000',
+      }).then(response => {
+        expect(response.status).to.equal(400)
+        expect(response.body.message).to.equal(
+          'Failed to publish as a template. Recompile from scratch'
+        )
+      })
+    })
+  })
+
+  it('asks for a main file when the main file was deleted after compiling', function () {
+    login(ADMIN_EMAIL)
+    createProject(projectName('NoMain')).then(id => {
+      compileProject(id).then(build => {
+        openProject(id)
+        cy.findByRole('treeitem', { name: 'main.tex' }).click()
+        cy.findByRole('button', { name: 'Open main.tex action menu' }).click()
+        cy.findByRole('menuitem', { name: 'Delete' }).click()
+        cy.findByRole('dialog').findByRole('button', { name: 'Delete' }).click()
+        cy.findByRole('treeitem', { name: 'main.tex' }).should('not.exist')
+
+        publishTemplate(id, { name: projectName('NoMain'), build }).then(
+          response => {
+            expect(response.status).to.equal(400)
+            expect(response.body.message).to.contain(
+              'Please choose the main file for this project'
+            )
+          }
+        )
+      })
+    })
   })
 })
 

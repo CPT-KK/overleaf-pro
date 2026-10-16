@@ -53,6 +53,13 @@ class OAuth2Model {
       return null
     }
 
+    // Like verifyToken of /oauth/token/info, which git-bridge calls; MCP
+    // requests only come through here
+    await OauthAccessToken.updateOne(
+      { _id: token._id },
+      { $set: { lastUsedAt: new Date() } }
+    ).exec()
+
     return {
       accessToken: token.accessToken,
       accessTokenExpiresAt: token.accessTokenExpiresAt,

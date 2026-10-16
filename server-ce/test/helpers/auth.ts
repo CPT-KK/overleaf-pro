@@ -93,14 +93,35 @@ export function setAuthentikName(username: string, name: string) {
   })
 }
 
-// Puts the Admins group and alice's name back the way blueprint.yaml defines
-// them, in case an earlier run stopped in the middle of changing them.
+export function setAuthentikEmail(username: string, email: string) {
+  authentikApi('GET', `core/users/?username=${username}`).then(users => {
+    authentikApi('PATCH', `core/users/${users.body.results[0].pk}/`, { email })
+  })
+}
+
+// Replaces the user's custom attributes. The LDAP outpost returns them as LDAP
+// attributes, overriding built-in ones of the same name; a list is returned
+// as an attribute with several values.
+export function setAuthentikAttributes(username: string, attributes: object) {
+  authentikApi('GET', `core/users/?username=${username}`).then(users => {
+    authentikApi('PATCH', `core/users/${users.body.results[0].pk}/`, {
+      attributes,
+    })
+  })
+}
+
+// Puts the Admins group, alice's name, carol's email and the custom attributes
+// back the way blueprint.yaml defines them, in case an earlier run stopped in
+// the middle of changing them.
 export function resetAuthentikUsers() {
   setAuthentikGroup('alice', 'Admins', true)
   setAuthentikGroup('carol', 'Admins', true)
   setAuthentikGroup('bob', 'Admins', false)
   setAuthentikGroup('dave', 'Admins', false)
   setAuthentikName('alice', 'Alice Admin')
+  setAuthentikEmail('carol', idpEmail('carol'))
+  setAuthentikAttributes('alice', {})
+  setAuthentikAttributes('bob', {})
 }
 
 // Whether the logged in user may open the admin pages.
