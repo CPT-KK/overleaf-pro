@@ -32,6 +32,8 @@ SUITE ?=
 SERVICES = $(if $(SUITE),$(shell cat suites/$(SUITE)/services 2>/dev/null))
 # Host port, only needed when the toolkit default (80) is taken locally
 OVERLEAF_PORT ?=
+# Runs only the cases whose full title (describe + it) contains this text
+GREP ?=
 
 .PHONY: setup test clean
 
@@ -86,6 +88,7 @@ test:
 	TEST_ROOT=$(TEST_ROOT) \
 	CYPRESS_IMAGE=$(CYPRESS_IMAGE) \
 	STARTUP_TIMEOUT=$(STARTUP_TIMEOUT) \
+	GREP="$(GREP)" \
 		bin/run-suite $(SUITE)
 
 # Shorthand for suites at the top level, e.g. make test_launchpad

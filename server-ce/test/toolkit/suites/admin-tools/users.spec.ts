@@ -410,10 +410,10 @@ describe('disabling accounts', function () {
     login(ADMIN_EMAIL)
     visitManageUsers()
     searchUsers(email)
-    rowAction(email, 'suspend')
+    rowAction(email, 'Disable')
     dialog().within(() => {
       cy.contains(email).should('exist')
-      cy.findByRole('button', { name: 'suspend' }).click()
+      cy.findByRole('button', { name: 'Disable' }).click()
     })
     dialog().should('not.exist')
     selectFilter('Disabled')
@@ -425,8 +425,8 @@ describe('disabling accounts', function () {
     visitManageUsers()
     selectFilter('Disabled')
     searchUsers(email)
-    rowAction(email, 'resume')
-    dialog().findByRole('button', { name: 'resume' }).click()
+    rowAction(email, 'Enable')
+    dialog().findByRole('button', { name: 'Enable' }).click()
     dialog().should('not.exist')
     userRow(email).should('not.exist')
 
@@ -512,7 +512,7 @@ describe('disabling accounts', function () {
     toolbar().findByRole('button', { name: 'Disable' }).click()
     dialog().within(() => {
       for (const email of emails) cy.contains(email).should('exist')
-      cy.findByRole('button', { name: 'suspend' }).click()
+      cy.findByRole('button', { name: 'Disable' }).click()
     })
     dialog().should('not.exist')
     for (const email of emails) {
@@ -524,7 +524,7 @@ describe('disabling accounts', function () {
     searchUsers(prefix)
     selectRows(emails)
     toolbar().findByRole('button', { name: 'Enable' }).click()
-    dialog().findByRole('button', { name: 'resume' }).click()
+    dialog().findByRole('button', { name: 'Enable' }).click()
     dialog().should('not.exist')
     for (const email of emails) {
       // The list leaves suspended out for enabled users
@@ -619,8 +619,8 @@ describe('deleting accounts', function () {
     visitManageUsers()
     selectFilter('Deleted user')
     searchUsers(email)
-    rowAction(email, 'purge')
-    dialog().findByRole('button', { name: 'purge' }).click()
+    rowAction(email, 'Delete permanently')
+    dialog().findByRole('button', { name: 'Delete permanently' }).click()
     dialog().should('not.exist')
     // Gone from the search results too
     userRow(email).should('not.exist')
@@ -701,8 +701,8 @@ describe('several selected users', function () {
     selectFilter('Deleted user')
     searchUsers(prefix)
     selectRows(emails)
-    toolbar().findByRole('button', { name: 'purge' }).click()
-    dialog().findByRole('button', { name: 'purge' }).click()
+    toolbar().findByRole('button', { name: 'Delete permanently' }).click()
+    dialog().findByRole('button', { name: 'Delete permanently' }).click()
     dialog().should('not.exist')
     for (const email of emails) userRow(email).should('not.exist')
     for (const email of emails) {

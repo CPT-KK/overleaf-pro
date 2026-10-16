@@ -1,4 +1,5 @@
 import { defineConfig } from 'cypress'
+import { plugin as cypressGrepPlugin } from '@cypress/grep/plugin'
 
 // Folder whose own *.spec.ts files to run, e.g. suites/login-register or the
 // variant suites/login-register/domain. Set by bin/run-suite.
@@ -15,8 +16,16 @@ export default defineConfig({
   downloadsFolder: 'cypress/downloads',
   viewportHeight: 768,
   viewportWidth: 1024,
+  // Only the cases whose full title contains GREP, e.g. `make test GREP=...`
+  expose: process.env.GREP
+    ? { grep: process.env.GREP, grepFilterSpecs: true, grepOmitFiltered: true }
+    : {},
   e2e: {
     specPattern: `${specDir}/*.spec.ts`,
     supportFile: '../cypress/support/e2e.ts',
+    setupNodeEvents(on, config) {
+      cypressGrepPlugin(config)
+      return config
+    },
   },
 })

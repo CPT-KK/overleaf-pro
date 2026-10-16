@@ -44,7 +44,7 @@ export function adminUserInfo(email: string) {
   )
 }
 
-// Suspends or resumes the user like the suspend and resume buttons of the
+// Suspends or resumes the user like the Disable and Enable buttons of the
 // list. Expects to be logged in as admin.
 export function setSuspended(email: string, suspended: boolean) {
   adminUserInfo(email).then(user => {

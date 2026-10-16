@@ -21,6 +21,10 @@ make clean                   # remove everything again
 Run `make clean` before you set up for another suite, every suite starts
 from an empty Overleaf.
 
+To run only some cases, add `GREP` to `make test`: it keeps the cases whose
+full title (the `describe` names and the `it` name) contains the text, e.g.
+`make test SUITE=admin-tools GREP="purges a deleted account"`.
+
 If port 80 is already in use on your machine, add `OVERLEAF_PORT=8080` to
 `make setup`. To test an image other than the latest ops image, add
 `OVERLEAF_IMAGE=<image>`.

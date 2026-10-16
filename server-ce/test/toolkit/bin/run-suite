@@ -6,8 +6,8 @@
 # same module), applies the subfolder's overleaf.rc / variables.env on top,
 # restarts Overleaf with bin/up and runs the subfolder's specs.
 #
-# Expects TOOLKIT_DIR, TOOLKIT_NETWORK, TEST_ROOT, CYPRESS_IMAGE and
-# STARTUP_TIMEOUT in the environment (set by the Makefile).
+# Expects TOOLKIT_DIR, TOOLKIT_NETWORK, TEST_ROOT, CYPRESS_IMAGE,
+# STARTUP_TIMEOUT and GREP in the environment (set by the Makefile).
 
 set -euo pipefail
 
@@ -28,6 +28,7 @@ function run_cypress() {
     --volume "$TEST_ROOT:/overleaf/server-ce/test" \
     --workdir /overleaf/server-ce/test/toolkit \
     --env "SPEC_DIR=$1" \
+    --env "GREP=${GREP:-}" \
     --env CYPRESS_BASE_URL=http://sharelatex \
     --entrypoint yarn \
     "$CYPRESS_IMAGE" \
