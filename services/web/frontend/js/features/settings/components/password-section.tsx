@@ -57,7 +57,8 @@ function PasswordInnerSection() {
   )
   const hasPassword = getMeta('ol-hasPassword')
 
-  if (isExternalAuthenticationSystemUsed && !isOverleaf) {
+  // local accounts keep their form: local login stays next to LDAP and SAML
+  if (isExternalAuthenticationSystemUsed && !isOverleaf && !hasPassword) {
     return <p>{t('password_managed_externally')}</p>
   }
 

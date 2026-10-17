@@ -110,7 +110,7 @@ const OIDCAuthenticationController = {
       return {
         user: false,
         info: {
-          redir: '/register',
+          redir: '/',
           status: 401,
         },
       }

@@ -1,4 +1,5 @@
 import fs from 'fs'
+import UserGetter from '../../app/src/Features/User/UserGetter.mjs'
 function readFilesContentFromEnv(envVar) {
 // envVar is either a file name: 'file.pem', or string with array: '["file.pem", "file2.pem"]'
   if (!envVar) return undefined
@@ -39,10 +40,19 @@ function firstValue(value) {
   return Array.isArray(value) ? value[0] : value
 }
 
+// Whether the account has a local password. Policy validators get user
+// objects that may not carry hashedPassword (a password reset token's user,
+// the session user), so read it from the database.
+async function hasPassword(userId) {
+  const user = await UserGetter.promises.getUser(userId, { hashedPassword: 1 })
+  return Boolean(user?.hashedPassword)
+}
+
 export {
   readFilesContentFromEnv,
   numFromEnv,
   boolFromEnv,
   splitFullName,
   firstValue,
+  hasPassword,
 }

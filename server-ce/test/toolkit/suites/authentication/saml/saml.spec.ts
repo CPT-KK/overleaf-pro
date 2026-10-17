@@ -2,15 +2,23 @@ import {
   AUTHENTIK_URL,
   authentikLogin,
   currentUser,
+  expectSsoPasswordRefused,
   idpEmail,
   isSiteAdmin,
+  requestPasswordReset,
   resetAuthentikUsers,
   setAuthentikAttributes,
   setAuthentikGroup,
   setAuthentikName,
   ssoLogin,
+  updatePassword,
 } from '../../../../helpers/auth'
-import { setSuspended } from '../../../../helpers/adminTools'
+import {
+  createLocalAccount,
+  setSuspended,
+  setUserPassword,
+} from '../../../../helpers/adminTools'
+import { login } from '../../../../helpers/login'
 import { postWithCsrf } from '../../../../helpers/request'
 
 // SAML login against authentik (services/authentik). Admins are mapped from
@@ -157,6 +165,45 @@ describe('SAML profile and logout', function () {
     cy.get('a[href="/saml/login"]').click()
     authentikLogin('alice')
     cy.url({ timeout: 30_000 }).should('contain', '/project')
+  })
+})
+
+describe('password reset of a SAML account', function () {
+  it('refuses to send a reset email, the password is at the IdP', function () {
+    samlLogin('bob')
+    requestPasswordReset(idpEmail('bob')).then(expectSsoPasswordRefused)
+  })
+
+  it('does not let the user change the password on the settings page', function () {
+    samlLogin('bob')
+    cy.visit('/user/settings')
+    cy.contains('p', 'because your group or organization uses single sign-on')
+    // CE does not check change-password on the route, the current password
+    // of an account without one never matches
+    updatePassword('anything', `New-${Cypress._.random(1e9)}-Pass`)
+      .its('status')
+      .should('equal', 400)
+  })
+
+  it('does not let an admin give the user a password', function () {
+    samlLogin('carol')
+    setUserPassword(idpEmail('bob'), `Admin-${Cypress._.random(1e9)}-Pass`)
+      .its('status')
+      .should('equal', 422)
+  })
+  it('lets a local account change the password on the settings page', function () {
+    const email = `local-${Cypress._.random(1e9)}@example.com`
+    const password = `Local-${Cypress._.random(1e9)}-Pass`
+    samlLogin('carol')
+    createLocalAccount(email)
+    setUserPassword(email, password).its('status').should('equal', 200)
+    cy.clearAllCookies()
+    login(email, password)
+    cy.visit('/user/settings')
+    cy.findByLabelText('Current password')
+    updatePassword(password, `Changed-${Cypress._.random(1e9)}-Pass`)
+      .its('status')
+      .should('equal', 200)
   })
 })
 

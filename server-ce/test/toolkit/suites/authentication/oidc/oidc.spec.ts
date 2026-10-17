@@ -2,16 +2,29 @@ import {
   AUTHENTIK_URL,
   authentikLogin,
   currentUser,
+  expectSsoPasswordRefused,
   idpEmail,
   isSiteAdmin,
+  requestPasswordReset,
   resetAuthentikUsers,
   setAuthentikEmail,
   setAuthentikGroup,
   setAuthentikName,
   ssoLogin,
+  updatePassword,
 } from '../../../../helpers/auth'
 import { login } from '../../../../helpers/login'
-import { setSuspended } from '../../../../helpers/adminTools'
+import {
+  deleteEmails,
+  passwordResetLink,
+  waitForEmail,
+} from '../../../../helpers/mailpit'
+import {
+  adminUserInfo,
+  createLocalAccount,
+  setSuspended,
+  setUserPassword,
+} from '../../../../helpers/adminTools'
 import { postWithCsrf } from '../../../../helpers/request'
 
 // OIDC login against authentik (services/authentik). Admins are mapped from
@@ -22,7 +35,8 @@ before(function () {
   resetAuthentikUsers()
 })
 
-const carolPassword = `Local-${Cypress._.random(1e9)}-Pass`
+// Changed by the password reset case
+let carolPassword = `Local-${Cypress._.random(1e9)}-Pass`
 
 function oidcLogin(username: string) {
   ssoLogin('/oidc/login', username)
@@ -89,6 +103,112 @@ describe('OIDC login', function () {
     setAuthentikName('alice', 'Alice Admin')
     oidcLogin('alice')
     currentUser().its('first_name').should('equal', 'Alice Admin')
+  })
+})
+
+describe('password reset of an OIDC account', function () {
+  it('refuses to send a reset email to an account made by OIDC', function () {
+    oidcLogin('bob')
+    requestPasswordReset(idpEmail('bob')).then(expectSsoPasswordRefused)
+  })
+
+  it('does not let an account made by OIDC change the password on the settings page', function () {
+    oidcLogin('bob')
+    cy.visit('/user/settings')
+    cy.contains('p', 'because your group or organization uses single sign-on')
+    // CE does not check change-password on the route, the current password
+    // of an account without one never matches
+    updatePassword('anything', `New-${Cypress._.random(1e9)}-Pass`)
+      .its('status')
+      .should('equal', 400)
+  })
+
+  // OIDC is linked to a local account, which keeps its password
+  it('lets a local account that OIDC is linked to change the password on the settings page', function () {
+    const newPassword = `Changed-${Cypress._.random(1e9)}-Pass`
+    cy.clearAllCookies()
+    login(idpEmail('carol'), carolPassword)
+    cy.visit('/user/settings')
+    cy.findByLabelText('Current password')
+    updatePassword(carolPassword, newPassword).its('status').should('equal', 200)
+    cy.then(() => {
+      carolPassword = newPassword
+    })
+  })
+
+  it('resets the password of a local account that OIDC is linked to', function () {
+    const newPassword = `Reset-${Cypress._.random(1e9)}-Pass`
+    deleteEmails()
+    requestPasswordReset(idpEmail('carol')).its('status').should('equal', 200)
+    waitForEmail(idpEmail('carol')).then(text => {
+      cy.visit(passwordResetLink(text))
+      cy.get('input[name="password"]').type(newPassword)
+      cy.findByRole('button', { name: 'Set new password' }).click()
+      cy.contains('Your password has been successfully changed')
+    })
+    cy.then(() => {
+      carolPassword = newPassword
+    })
+    cy.clearAllCookies()
+    login(idpEmail('carol'), newPassword)
+    currentUser().its('email').should('equal', idpEmail('carol'))
+  })
+
+  it('does not let an admin give an account made by OIDC a password', function () {
+    oidcLogin('alice')
+    setUserPassword(idpEmail('bob'), `Admin-${Cypress._.random(1e9)}-Pass`)
+      .its('status')
+      .should('equal', 422)
+  })
+
+  it('lets an admin set the password of a local account that OIDC is linked to', function () {
+    const newPassword = `Admin-${Cypress._.random(1e9)}-Pass`
+    oidcLogin('alice')
+    setUserPassword(idpEmail('carol'), newPassword).its('status').should('equal', 200)
+    cy.then(() => {
+      carolPassword = newPassword
+    })
+    cy.clearAllCookies()
+    login(idpEmail('carol'), newPassword)
+    currentUser().its('email').should('equal', idpEmail('carol'))
+  })
+})
+
+// The first OIDC login of a user links the account with the user's email,
+// so a user must not take another email: the IdP owns it, as with LDAP and
+// SAML. An admin can still change it.
+describe('email of a local account on an OIDC instance', function () {
+  const email = `local-${Cypress._.random(1e9)}@example.com`
+  const password = `Local-${Cypress._.random(1e9)}-Pass`
+
+  before(function () {
+    oidcLogin('alice')
+    createLocalAccount(email)
+    setUserPassword(email, password).its('status').should('equal', 200)
+  })
+
+  it('does not let the user take the email of an IdP user', function () {
+    cy.clearAllCookies()
+    login(email, password)
+    cy.visit('/user/settings')
+    postWithCsrf('/user/settings', { email: idpEmail('eve') })
+      .its('status')
+      .should('equal', 200)
+    currentUser().its('email').should('equal', email)
+    cy.get('#email-input').should('have.attr', 'readonly')
+    oidcLogin('alice')
+    adminUserInfo(idpEmail('eve')).should('equal', null)
+  })
+
+  it('lets an admin change the email', function () {
+    const newEmail = `changed-${Cypress._.random(1e9)}@example.com`
+    oidcLogin('alice')
+    adminUserInfo(email).then(user => {
+      postWithCsrf(`/admin/user/${user.id}/update`, { email: newEmail })
+        .its('status')
+        .should('equal', 200)
+    })
+    adminUserInfo(newEmail).its('email').should('equal', newEmail)
   })
 })
 

@@ -620,6 +620,7 @@ async function updateUser(req, res, next) {
   }
 
   const projection = Object.fromEntries(Object.keys(updatesInput).map(k => [k, 1]))
+  if ('password' in updatesInput) projection.hashedPassword = 1
   const user = await User.findById(userId, projection).exec()
 
   if (!user) {
@@ -684,6 +685,10 @@ async function updateUser(req, res, next) {
       // ignore empty password updates
       if (value == null || value === '') {
         continue
+      }
+      // an account without a local password logs in through SSO only
+      if (!user.hashedPassword) {
+        return HttpErrorHandler.unprocessableEntity(req, res, 'This account logs in through SSO and cannot have a password')
       }
       // validate password
       if (typeof value !== 'string' || value.length < 8) {

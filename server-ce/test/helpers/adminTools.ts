@@ -54,6 +54,27 @@ export function setSuspended(email: string, suspended: boolean) {
   })
 }
 
+// Creates a local account like the Create account modal, not activated.
+// Expects to be logged in as admin.
+export function createLocalAccount(email: string) {
+  cy.visit('/admin/user')
+  postWithCsrf('/admin/user/create', {
+    email,
+    first_name: 'Local',
+    last_name: 'Account',
+  })
+    .its('status')
+    .should('equal', 200)
+}
+
+// Sets a new password for the user like the Password tab of the update
+// modal. Expects to be logged in as admin.
+export function setUserPassword(email: string, password: string) {
+  return adminUserInfo(email).then(user =>
+    postWithCsrf(`/admin/user/${user.id}/update`, { password })
+  )
+}
+
 // Posts the login form like the login page does, without keeping the
 // session. Answers {redir} where the page would go next, or 401.
 export function tryLogin(email: string, password = DEFAULT_PASSWORD) {

@@ -5,6 +5,8 @@
 //   carol  group Admins
 //   dave   no groups
 //   eve    eve@other.test, frank  frank@sub.ayakaleaf.test
+import { postWithCsrf } from './request'
+
 export const AUTHENTIK_URL = 'http://authentik:9000'
 
 export function idpEmail(username: string) {
@@ -138,4 +140,28 @@ export function currentUser() {
     .get('meta[name="ol-user"]')
     .invoke('attr', 'content')
     .then(content => JSON.parse(content as string))
+}
+
+// Asks for a password reset email like the form of /user/password/reset,
+// logged out.
+export function requestPasswordReset(email: string) {
+  cy.clearAllCookies()
+  cy.visit('/user/password/reset')
+  return postWithCsrf('/user/password/reset', { email })
+}
+
+// The answer for an account whose password is managed by the IdP
+export function expectSsoPasswordRefused(response: Cypress.Response<any>) {
+  expect(response.status).to.equal(403)
+  expect(response.body.message.key).to.equal('no-password-allowed-due-to-sso')
+}
+
+// Changes the password on the settings page like its form, logged in
+export function updatePassword(currentPassword: string, newPassword: string) {
+  cy.visit('/user/settings')
+  return postWithCsrf('/user/password/update', {
+    currentPassword,
+    newPassword1: newPassword,
+    newPassword2: newPassword,
+  })
 }
