@@ -59,6 +59,10 @@ services:
       dockerfile: services/document-updater/Dockerfile
     env_file:
       - dev.env
+    environment:
+      # Dropbox gets a doc when it is written to Mongo, as with
+      # server-ce/init_scripts/100_dropbox_background_flush.sh
+      - CONTINUOUS_BACKGROUND_FLUSH=true
 
   filestore:
     build:
@@ -136,6 +140,13 @@ services:
     env_file:
       - dev.env
 
+  third-party-datastore:
+    build:
+      context: ..
+      dockerfile: services/third-party-datastore/Dockerfile
+    env_file:
+      - dev.env
+
   redis:
     image: redis:7
     ports:
@@ -157,6 +168,7 @@ services:
       - EMAIL_CONFIRMATION_DISABLED=true
       - NODE_ENV=development
       - OVERLEAF_ALLOW_PUBLIC_ACCESS=true
+      - TPDS_HOST=third-party-datastore
     command: ["node", "app.mjs"]
     volumes:
       - sharelatex-data:/var/lib/overleaf
@@ -175,6 +187,7 @@ services:
       - notifications
       - project-history
       - real-time
+      - third-party-datastore
 
   webpack:
     build:
