@@ -41,3 +41,8 @@ export function waitForEmail(
 export function activationLink(text: string) {
   return text.match(/\S*\/user\/activate\?token=\S+/)![0]
 }
+
+// The link of a password reset email of Overleaf
+export function passwordResetLink(text: string) {
+  return text.match(/\S*\/user\/password\/set\?passwordResetToken=\S+/)![0]
+}

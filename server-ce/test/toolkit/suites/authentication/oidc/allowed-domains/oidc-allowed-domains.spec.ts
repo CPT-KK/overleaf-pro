@@ -28,11 +28,15 @@ describe('OIDC with allowed email domains', function () {
 
   it(`refuses an account for ${idpEmail('eve')}`, function () {
     firstOidcLogin('eve')
-    cy.url({ timeout: 30_000 }).should('contain', '/register')
+    // back on the login page, not logged in
+    cy.url({ timeout: 30_000 }).should('contain', '/login')
+    cy.get('a[href="/oidc/login"]')
   })
 
   it(`refuses an account for the subdomain address ${idpEmail('frank')}`, function () {
     firstOidcLogin('frank')
-    cy.url({ timeout: 30_000 }).should('contain', '/register')
+    // back on the login page, not logged in
+    cy.url({ timeout: 30_000 }).should('contain', '/login')
+    cy.get('a[href="/oidc/login"]')
   })
 })
