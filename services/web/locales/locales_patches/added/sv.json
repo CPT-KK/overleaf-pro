@@ -1,4 +1,7 @@
 {
+  "about_to_permanently_delete_accounts": "Du håller på att ta bort följande konton permanent:",
+  "about_to_restore_accounts": "Du håller på att återställa följande användarkonton:",
+  "about_to_restore_projects": "Du håller på att återställa följande projekt:",
   "ask_proj_owner_to_unlink_from_current_x": "Be projektets ägare (<0>__projectOwnerEmail__</0>) att koppla bort projektet från det nuvarande __provider__-repositoryt och skapa en anslutning till ett annat repository.",
   "checking_project_x_status": "Kontrollerar projektstatus på __provider__",
   "create_project_in_x": "Skapa ett __provider__ repo",
@@ -16,6 +19,8 @@
   "project_not_linked_to_x": "Detta projekt är inte länkat till ett __provider__ repo. Du kan skapa ett repo för det på __provider__:",
   "recent_commits_in_x": "Senaste commits på __provider__",
   "select_x_repository": "Välj ett __provider__ repo att importera till __appName__.",
+  "show_x_more_users": "Visa __count__ användare till",
+  "show_x_more_users_plural": "Visa __count__ användare till",
   "sync_project_to_x_explanation": "Alla ändringar du gör i __appName__ kommer att commitas och slås samman med uppdateringar i __provider__.",
   "sync_with_a_x_repository": "Synkronisera med ett __provider__-repo.",
   "sync_with_x": "Synkronisera med __provider__",

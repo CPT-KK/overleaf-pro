@@ -1,4 +1,7 @@
 {
+  "about_to_permanently_delete_accounts": "Zaraz trwale usuniesz następujące konta:",
+  "about_to_restore_accounts": "Zaraz przywrócisz następujące konta użytkowników:",
+  "about_to_restore_projects": "Zaraz przywrócisz następujące projekty:",
   "ask_proj_owner_to_unlink_from_current_x": "Poproś właściciela projektu (<0>__projectOwnerEmail__</0>) o odłączenie projektu od bieżącego repozytorium __provider__ i utworzenie połączenia z innym repozytorium.",
   "checking_project_x_status": "Sprawdzanie statusu projektu w __provider__",
   "create_project_in_x": "Utwórz repozytorium __provider__",
@@ -16,6 +19,8 @@
   "project_not_linked_to_x": "Ten projekt nie jest połączony z repozytorium __provider__. Możesz utworzyć dla niego repozytorium w __provider__:",
   "recent_commits_in_x": "Najnowsze commity w __provider__",
   "select_x_repository": "Wybierz repozytorium __provider__, aby zaimportować je do __appName__.",
+  "show_x_more_users": "Pokaż więcej użytkowników (__count__)",
+  "show_x_more_users_plural": "Pokaż więcej użytkowników (__count__)",
   "sync_project_to_x_explanation": "Wszystkie zmiany wprowadzone w __appName__ zostaną zatwierdzone i scalone z aktualizacjami w __provider__.",
   "sync_with_a_x_repository": "Synchronizuj z repozytorium __provider__.",
   "sync_with_x": "Synchronizuj z __provider__",

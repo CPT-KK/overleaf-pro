@@ -1,4 +1,7 @@
 {
+  "about_to_permanently_delete_accounts": "Du er i ferd med å slette følgende kontoer permanent:",
+  "about_to_restore_accounts": "Du er i ferd med å gjenopprette følgende brukerkontoer:",
+  "about_to_restore_projects": "Du er i ferd med å gjenopprette følgende prosjekter:",
   "ask_proj_owner_to_unlink_from_current_x": "Be eieren av prosjektet (<0>__projectOwnerEmail__</0>) om å koble prosjektet fra det nåværende __provider__-repoet og opprette en tilkobling til et annet repo.",
   "checking_project_x_status": "Sjekker prosjektstatus i __provider__",
   "create_project_in_x": "Lag et __provider__-repository",
@@ -16,6 +19,8 @@
   "project_not_linked_to_x": "Dette prosjektet er ikke koblet til et __provider__-repository. Du kan lage et repository for det i __provider__:",
   "recent_commits_in_x": "Nylige commits i __provider__",
   "select_x_repository": "Velg et __provider__-repository å importere til __appName__.",
+  "show_x_more_users": "Vis __count__ bruker til",
+  "show_x_more_users_plural": "Vis __count__ brukere til",
   "sync_project_to_x_explanation": "Alle endringer du har gjort i __appName__ vil bli commited og merged med eventuelle oppdateringer i __provider__.",
   "sync_with_a_x_repository": "Synkroniser med et __provider__-repositorium.",
   "sync_with_x": "Synkroniser med __provider__",

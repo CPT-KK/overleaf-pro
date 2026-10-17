@@ -130,7 +130,7 @@ export function UserListProvider({ children }: UserListProviderProps) {
       local: t('password'),
       ldap: t('ldap'),
       saml: t('saml'),
-      oidc: t('oidc'),
+      oidc: 'OIDC',
     }
     return new Map(filterKeys.map(key => [key, capitalize(labels[key])]))
   }, [t])

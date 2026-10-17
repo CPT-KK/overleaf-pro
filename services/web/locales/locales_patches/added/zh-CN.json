@@ -1,4 +1,7 @@
 {
+  "about_to_permanently_delete_accounts": "您将永久删除下面的账户：",
+  "about_to_restore_accounts": "您将恢复下面的用户账户：",
+  "about_to_restore_projects": "您将恢复下面的项目：",
   "ask_proj_owner_to_unlink_from_current_x": "请求项目所有者 (<0>__projectOwnerEmail__</0>) 取消项目与当前 __provider__ 存储库的链接，并创建与其他存储库的连接。",
   "checking_project_x_status": "正在检查__provider__中的项目状态",
   "create_project_in_x": "创建一个__provider__存储库",
@@ -16,6 +19,8 @@
   "project_not_linked_to_x": "该项目未与__provider__任一存储库关联。您可以在__provider__中为该项目创建一个存储库：",
   "recent_commits_in_x": "__provider__中最近的提交",
   "select_x_repository": "选取要导入 __appName__ 的__provider__存储库",
+  "show_x_more_users": "再显示 __count__ 个用户",
+  "show_x_more_users_plural": "再显示 __count__ 个用户",
   "sync_project_to_x_explanation": "您在 __appName__ 中的所有更改将被提交并与 __provider__ 中的所有更新合并。",
   "sync_with_a_x_repository": "与 __provider__ 存储库同步。",
   "sync_with_x": "与 __provider__ 同步",

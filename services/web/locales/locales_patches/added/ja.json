@@ -1,4 +1,7 @@
 {
+  "about_to_permanently_delete_accounts": "次のアカウントを完全に削除します：",
+  "about_to_restore_accounts": "次のユーザーアカウントを復元します：",
+  "about_to_restore_projects": "次のプロジェクトを復元します：",
   "ask_proj_owner_to_unlink_from_current_x": "プロジェクトのオーナー（<0>__projectOwnerEmail__</0>）に、現在の __provider__ リポジトリとのリンクを解除し、別のリポジトリへの接続を作成するよう依頼してください。",
   "checking_project_x_status": "__provider__のプロジェクトステータスを確認中",
   "create_project_in_x": "__provider__リポジトリの作成",
@@ -16,6 +19,8 @@
   "project_not_linked_to_x": "このプロジェクトは__provider__リポジトリと接続されていません。__provider__でリポジトリを作成できます：",
   "recent_commits_in_x": "__provider__の最新コミット",
   "select_x_repository": "__appName__ にインポートする__provider__リポジトリを選択。",
+  "show_x_more_users": "さらに __count__ 人のユーザーを表示",
+  "show_x_more_users_plural": "さらに __count__ 人のユーザーを表示",
   "sync_project_to_x_explanation": "__appName__ で行った変更はすべて__provider__の更新と関連付けられ、統合されます。",
   "sync_with_a_x_repository": "__provider__リポジトリと同期します。",
   "sync_with_x": "__provider__と同期",

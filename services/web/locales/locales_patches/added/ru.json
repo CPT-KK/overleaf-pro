@@ -1,4 +1,7 @@
 {
+  "about_to_permanently_delete_accounts": "Следующие учётные записи будут удалены безвозвратно:",
+  "about_to_restore_accounts": "Следующие учётные записи пользователей будут восстановлены:",
+  "about_to_restore_projects": "Следующие проекты будут восстановлены:",
   "ask_proj_owner_to_unlink_from_current_x": "Попросите владельца проекта (<0>__projectOwnerEmail__</0>) отвязать проект от текущего репозитория __provider__ и создать подключение к другому репозиторию.",
   "checking_project_x_status": "Проверка статуса проекта на __provider__",
   "create_project_in_x": "Создать проект на __provider__",
@@ -16,6 +19,8 @@
   "project_not_linked_to_x": "Этот проект не связан ни с одним проектом на __provider__. Вы можете создать для него проект на __provider__:",
   "recent_commits_in_x": "Последние коммиты на __provider__",
   "select_x_repository": "Выберите проект на __provider__ для импорта в __appName__",
+  "show_x_more_users": "Показать ещё пользователей (__count__)",
+  "show_x_more_users_plural": "Показать ещё пользователей (__count__)",
   "sync_project_to_x_explanation": "Все изменения, сделанные Вами в __appName__ будут интегрированы (commit и merge) со всеми обновлениями на __provider__.",
   "sync_with_a_x_repository": "Синхронизируйте с репозиторием __provider__.",
   "sync_with_x": "Синхронизация с __provider__",

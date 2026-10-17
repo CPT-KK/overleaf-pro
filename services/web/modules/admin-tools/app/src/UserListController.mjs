@@ -301,13 +301,15 @@ async function _searchUsers(searchTerm) {
     'features.compileTimeout': 1,
     'aiFeatures.enabled': 1,
   }
+  // the search is a literal, as in the template gallery
+  const pattern = _.escapeRegExp(searchTerm)
 
   const activeUsers = await User.find({
     $or: [
-      { email: { $regex: searchTerm, $options: 'i' } },
-      { first_name: { $regex: searchTerm, $options: 'i' } },
-      { last_name: { $regex: searchTerm, $options: 'i' } },
-      { $expr: { $regexMatch: { input: { $toString: '$_id' }, regex: searchTerm, options: 'i' } } }
+      { email: { $regex: pattern, $options: 'i' } },
+      { first_name: { $regex: pattern, $options: 'i' } },
+      { last_name: { $regex: pattern, $options: 'i' } },
+      { $expr: { $regexMatch: { input: { $toString: '$_id' }, regex: pattern, options: 'i' } } }
     ]
   }, projection)
   .limit(1000)
@@ -321,10 +323,10 @@ async function _searchUsers(searchTerm) {
 
   const deletedUsers = await DeletedUser.aggregate([
     { $match: { user: { $type: 'object' }, $or: [
-      { 'user.email': { $regex: searchTerm, $options: 'i' } },
-      { 'user.first_name': { $regex: searchTerm, $options: 'i' } },
-      { 'user.last_name': { $regex: searchTerm, $options: 'i' } },
-      { $expr: { $regexMatch: { input: { $toString: '$user._id' }, regex: searchTerm, options: 'i' } } }
+      { 'user.email': { $regex: pattern, $options: 'i' } },
+      { 'user.first_name': { $regex: pattern, $options: 'i' } },
+      { 'user.last_name': { $regex: pattern, $options: 'i' } },
+      { $expr: { $regexMatch: { input: { $toString: '$user._id' }, regex: pattern, options: 'i' } } }
     ] } },
     { $project: projectionDeleted },
     { $limit: 1000 },

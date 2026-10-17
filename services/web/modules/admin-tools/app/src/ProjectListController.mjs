@@ -105,6 +105,8 @@ async function _searchProjects(
     trashed: 1,
     owner_ref: 1,
   }
+  // the search is a literal, as in the template gallery
+  const pattern = _.escapeRegExp(search)
   const userIdObj = userId ? new mongoose.Types.ObjectId(userId) : null
 
   const activeProjects = await Project.aggregate([
@@ -122,11 +124,11 @@ async function _searchProjects(
         $and: [
           {
             $or: [
-              { name: { $regex: search, $options: 'i' } },
-              { $expr: { $regexMatch: { input: { $toString: '$_id' }, regex: search, options: 'i' } } },
-              { 'owner.email': { $regex: search, $options: 'i' } },
-              { 'owner.first_name': { $regex: search, $options: 'i' } },
-              { 'owner.last_name': { $regex: search, $options: 'i' } }
+              { name: { $regex: pattern, $options: 'i' } },
+              { $expr: { $regexMatch: { input: { $toString: '$_id' }, regex: pattern, options: 'i' } } },
+              { 'owner.email': { $regex: pattern, $options: 'i' } },
+              { 'owner.first_name': { $regex: pattern, $options: 'i' } },
+              { 'owner.last_name': { $regex: pattern, $options: 'i' } }
             ]
           },
           ...(userIdObj ? [{ owner_ref: userIdObj }] : [])
@@ -159,11 +161,11 @@ async function _searchProjects(
         $and: [
           {
             $or: [
-              { 'project.name': { $regex: search, $options: 'i' } },
-              { $expr: { $regexMatch: { input: { $toString: '$project._id' }, regex: search, options: 'i' } } },
-              { 'owner.email': { $regex: search, $options: 'i' } },
-              { 'owner.first_name': { $regex: search, $options: 'i' } },
-              { 'owner.last_name': { $regex: search, $options: 'i' } }
+              { 'project.name': { $regex: pattern, $options: 'i' } },
+              { $expr: { $regexMatch: { input: { $toString: '$project._id' }, regex: pattern, options: 'i' } } },
+              { 'owner.email': { $regex: pattern, $options: 'i' } },
+              { 'owner.first_name': { $regex: pattern, $options: 'i' } },
+              { 'owner.last_name': { $regex: pattern, $options: 'i' } }
             ],
           },
           ...(userIdObj ? [{ 'project.owner_ref': userIdObj }] : [{ project: { $type: 'object' } }])

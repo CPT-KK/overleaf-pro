@@ -162,6 +162,20 @@ describe('finding users', function () {
     cy.findByText('No Search Results').should('exist')
   })
 
+  it('finds a user by an email address with characters of a regular expression', function () {
+    const plus = `admin-tools+${uuid()}@example.com`
+    ensureUserExists(plus)
+    login(ADMIN_EMAIL)
+    visitManageUsers()
+    searchUsers(plus)
+    userRow(plus).should('exist')
+    cy.get('tbody tr').should('have.length', 1)
+    // not a valid regular expression, searched as it is
+    postWithCsrf('/admin/users/search', { search: '(' })
+      .its('status')
+      .should('equal', 200)
+  })
+
   it('shows the account details in Info', function () {
     login(ADMIN_EMAIL)
     visitManageUsers()
@@ -807,7 +821,7 @@ describe('the list', function () {
     searchUsers(prefix)
     cy.get('tbody tr').should('have.length', 10)
     cy.contains('Showing 10 out of 12 users').should('exist')
-    cy.findByRole('button', { name: 'Show more 2 users' }).click()
+    cy.findByRole('button', { name: 'Show 2 more users' }).click()
     cy.get('tbody tr').should('have.length', 12)
     cy.contains('Showing 12 out of 12 users').should('exist')
   })

@@ -1,4 +1,7 @@
 {
+  "about_to_permanently_delete_accounts": "Du er ved at slette følgende konti permanent:",
+  "about_to_restore_accounts": "Du er ved at gendanne følgende brugerkonti:",
+  "about_to_restore_projects": "Du er ved at gendanne følgende projekter:",
   "ask_proj_owner_to_unlink_from_current_x": "Anmod ejeren af dette projekt (<0>__projectOwnerEmail__</0>) om at afkoble projektet fra det nuværende __provider__ repository og forbind til et andet repository.",
   "checking_project_x_status": "Tjekker projektstatus i __provider__",
   "create_project_in_x": "Opret et __provider__ repository",
@@ -16,6 +19,8 @@
   "project_not_linked_to_x": "Dette projekt er ikke linket til et __provider__ repository. Du kan skabe et repository for det på __provider__:",
   "recent_commits_in_x": "Seneste commits i __provider__",
   "select_x_repository": "Vælg et __provider__ repository som skal importeres til __appName__.",
+  "show_x_more_users": "Vis __count__ bruger mere",
+  "show_x_more_users_plural": "Vis __count__ flere brugere",
   "sync_project_to_x_explanation": "Ændringer som du har lavet i __appName__ vil blive committed og flettet sammen med opdateringer i __provider__",
   "sync_with_a_x_repository": "Synkroniser med et __provider__-repository.",
   "sync_with_x": "Synkroniser med __provider__",

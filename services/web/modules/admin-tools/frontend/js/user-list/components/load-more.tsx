@@ -21,8 +21,7 @@ export default function LoadMore() {
             className="user-list-load-more-button"
             onClick={() => loadMoreUsers()}
           >
-            {/* {t('show_x_more_users', { x: loadMoreCount })} */}
-            {"Show more " + loadMoreCount + " users"}
+            {t('show_x_more_users', { count: loadMoreCount })}
           </OLButton>
         </>
       ) : null}

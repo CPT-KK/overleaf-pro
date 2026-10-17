@@ -1,4 +1,7 @@
 {
+  "about_to_permanently_delete_accounts": "Şu hesapları kalıcı olarak silmek üzeresiniz:",
+  "about_to_restore_accounts": "Şu kullanıcı hesaplarını geri yüklemek üzeresiniz:",
+  "about_to_restore_projects": "Şu projeleri geri yüklemek üzeresiniz:",
   "ask_proj_owner_to_unlink_from_current_x": "Projenin sahibinden (<0>__projectOwnerEmail__</0>) projenin bağlantısını mevcut __provider__ deposundan kaldırmasını ve farklı bir depoyla bağlantı oluşturmasını isteyin.",
   "checking_project_x_status": "Projenin __provider__’daki durumu kontrol ediliyor",
   "create_project_in_x": "__provider__ deposu oluştur",
@@ -16,6 +19,8 @@
   "project_not_linked_to_x": "Bu projenin herhangi bir __provider__ deposu ile bağlantısı bulunmamaktadır. __provider__’da bunun için bir depo oluşturabilirsiniz:",
   "recent_commits_in_x": "__provider__’da yapılan güncel işlemler",
   "select_x_repository": "__appName__’e yüklemek istediğiniz __provider__ deponuzu seçiniz",
+  "show_x_more_users": "__count__ kullanıcı daha göster",
+  "show_x_more_users_plural": "__count__ kullanıcı daha göster",
   "sync_project_to_x_explanation": "__appName__ üzerinden yaptığınız tüm değişiklikler __provider__ üzerine işlenecek ve birleştirilecektir.",
   "sync_with_a_x_repository": "Bir __provider__ deposuyla senkronize edin.",
   "sync_with_x": "__provider__ ile senkronize edin",

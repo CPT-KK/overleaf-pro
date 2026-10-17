@@ -1,4 +1,7 @@
 {
+  "about_to_permanently_delete_accounts": "Chcete trvale smazat následující účty:",
+  "about_to_restore_accounts": "Chcete obnovit následující uživatelské účty:",
+  "about_to_restore_projects": "Chcete obnovit následující projekty:",
   "ask_proj_owner_to_unlink_from_current_x": "Požádejte vlastníka projektu (<0>__projectOwnerEmail__</0>), aby odpojil projekt od aktuálního repozitáře __provider__ a vytvořil propojení s jiným repozitářem.",
   "checking_project_x_status": "Kontroluji stav projektu na __provider__u",
   "create_project_in_x": "Vytvořit __provider__ repozitář.",
@@ -16,6 +19,8 @@
   "project_not_linked_to_x": "Tento projekt není spojen s __provider__ repozitářem. Můžete pro něj __provider__ repozitář vytvořit:",
   "recent_commits_in_x": "Poslední commity do __provider__u",
   "select_x_repository": "Vybrat __provider__ repozitář k importování do __appName__u.",
+  "show_x_more_users": "Zobrazit další uživatele (__count__)",
+  "show_x_more_users_plural": "Zobrazit další uživatele (__count__)",
   "sync_project_to_x_explanation": "Každá změna, kterou uděláte v __appName__u, bude commitována a mergována z každou změnou v __provider__u.",
   "sync_with_a_x_repository": "Synchronizujte s repozitářem __provider__.",
   "sync_with_x": "Synchronizovat s __provider__em",

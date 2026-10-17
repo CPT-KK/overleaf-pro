@@ -1,4 +1,7 @@
 {
+  "about_to_permanently_delete_accounts": "Du bist dabei, die folgenden Konten endgültig zu löschen:",
+  "about_to_restore_accounts": "Du bist dabei, die folgenden Benutzerkonten wiederherzustellen:",
+  "about_to_restore_projects": "Du bist dabei, die folgenden Projekte wiederherzustellen:",
   "ask_proj_owner_to_unlink_from_current_x": "Bitte den Projektbesitzer (<0>__projectOwnerEmail__</0>), das Projekt vom aktuellen __provider__-Repository zu entkoppeln und eine Verbindung zu einem anderen herzustellen.",
   "checking_project_x_status": "Status auf __provider__ abfragen",
   "create_project_in_x": "Ein __provider__ Repository erstellen",
@@ -16,6 +19,8 @@
   "project_not_linked_to_x": "Dieses Projekt ist nicht mit einem __provider__ Repository verlinkt. Du kannst ein neues Repository in __provider__ erstellen:",
   "recent_commits_in_x": "Neueste Commits auf __provider__",
   "select_x_repository": "Wähle ein __provider__-Repository, das du in __appName__ importieren möchtest.",
+  "show_x_more_users": "__count__ weiteren Benutzer anzeigen",
+  "show_x_more_users_plural": "__count__ weitere Benutzer anzeigen",
   "sync_project_to_x_explanation": "Alle Änderungen die du in __appName__ vornimmst werden in __provider__ festgelegt und mit allen Updates in __provider__ zusammengeführt.",
   "sync_with_a_x_repository": "Synchronisiere mit einem __provider__-Repository.",
   "sync_with_x": "Mit __provider__ synchronisieren",

@@ -428,6 +428,17 @@ describe('every project', function () {
     })
   })
 
+  it('finds a project whose name has characters of a regular expression', function () {
+    const name = `${projectName('Regex')} (1) [draft]`
+    createProjects(owner, name).then(() => {
+      login(ADMIN_EMAIL)
+      visitAllProjects()
+      searchProjects(name)
+      projectRow(name).should('exist')
+      cy.get('tbody tr').should('have.length', 1)
+    })
+  })
+
   it('changes the owner and shows the new one in the list', function () {
     const name = projectName('AllGive')
     createProjects(owner, name).then(([projectId]) => {

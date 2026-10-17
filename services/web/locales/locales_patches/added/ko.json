@@ -1,4 +1,7 @@
 {
+  "about_to_permanently_delete_accounts": "다음 계정을 영구적으로 삭제하려 합니다:",
+  "about_to_restore_accounts": "다음 사용자 계정을 복원하려 합니다:",
+  "about_to_restore_projects": "다음 프로젝트를 복원하려 합니다:",
   "ask_proj_owner_to_unlink_from_current_x": "프로젝트 소유자(<0>__projectOwnerEmail__</0>)에게 현재 연결된 __provider__ 저장소와의 연결을 해제하고 다른 저장소로 연결을 만들어 달라고 요청하세요.",
   "checking_project_x_status": "__provider__에 프로젝트 상태 확인 중",
   "create_project_in_x": "__provider__ 저장소 만들기",
@@ -16,6 +19,8 @@
   "project_not_linked_to_x": "이 프로젝트는 __provider__ 저장소에 연결되어있지 않습니다. __provider__에 프로젝트를위한 저장소를 만드실 수 있습니다:",
   "recent_commits_in_x": "__provider__의 최근 커밋",
   "select_x_repository": "__appName__에 불러올 __provider__ 저장소를 선택합니다.",
+  "show_x_more_users": "사용자 __count__명 더 보기",
+  "show_x_more_users_plural": "사용자 __count__명 더 보기",
   "sync_project_to_x_explanation": "__appName__에 만들어진 모든 변경사항이 __provider__의 모든 업데이트와 통합될 것 입니다.",
   "sync_with_a_x_repository": "__provider__ 저장소와 동기화합니다.",
   "sync_with_x": "__provider__와 동기화",

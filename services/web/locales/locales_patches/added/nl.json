@@ -1,4 +1,7 @@
 {
+  "about_to_permanently_delete_accounts": "Je staat op het punt de volgende accounts definitief te verwijderen:",
+  "about_to_restore_accounts": "Je staat op het punt de volgende gebruikersaccounts te herstellen:",
+  "about_to_restore_projects": "Je staat op het punt de volgende projecten te herstellen:",
   "ask_proj_owner_to_unlink_from_current_x": "Vraag de eigenaar van het project (<0>__projectOwnerEmail__</0>) om de koppeling van het project met de huidige __provider__-repository te verbreken en een verbinding te maken met een andere repository.",
   "checking_project_x_status": "Bezig met controleren van de projectstatus in __provider__",
   "create_project_in_x": "Een __provider__ repository maken",
@@ -16,6 +19,8 @@
   "project_not_linked_to_x": "Dit project is niet verbonden aan het __provider__ repository. Je kunt er een repository voor aanmaken in __provider__:",
   "recent_commits_in_x": "Recente toevoegingen in __provider__",
   "select_x_repository": "Selecteer een __provider__ repository om naar __appName__ te importeren.",
+  "show_x_more_users": "Nog __count__ gebruiker tonen",
+  "show_x_more_users_plural": "Nog __count__ gebruikers tonen",
   "sync_project_to_x_explanation": "Aangebrachte wijzigingen in __appName__ zullen worden toegevoegd en samengevoegd met updates in __provider__.",
   "sync_with_a_x_repository": "Synchroniseer met een __provider__-repository.",
   "sync_with_x": "Synchroniseren met __provider__",
