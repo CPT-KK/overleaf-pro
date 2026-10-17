@@ -3,7 +3,7 @@
 # and push them to GitHub Container Registry
 #
 # Published at:
-#     ghcr.io/ayaka-notes/overleaf-pro/dev
+#     ghcr.io/cpt-kk/overleaf-pro/dev
 #
 # ---------------------------------
 
@@ -13,8 +13,13 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   GHCR_REGISTRY: ghcr.io
+  REGISTRY_IMAGE: ghcr.io/cpt-kk/overleaf-pro/dev
 
 jobs:
   build-image:
@@ -50,7 +55,7 @@ jobs:
       - name: "Checkout Current Repository"
         uses: actions/checkout@v7
         with:
-          ref: server-pro
+          ref: ${{ github.sha }}
       - name: "Setup node environment"
         uses: actions/setup-node@v7
         with:
@@ -85,8 +90,8 @@ jobs:
           export BUILDX_NO_DEFAULT_ATTESTATIONS=1
           cd ./develop/
           bin/build ${{matrix.image-name}}
-          docker tag develop-${{matrix.image-name}}:latest ${{env.GHCR_REGISTRY}}/ayaka-notes/overleaf-pro/dev:${{matrix.image-name}}-${PLATFORM_PAIR}
-          docker push ${{env.GHCR_REGISTRY}}/ayaka-notes/overleaf-pro/dev:${{matrix.image-name}}-${PLATFORM_PAIR}
+          docker tag develop-${{matrix.image-name}}:latest ${{env.REGISTRY_IMAGE}}:${{matrix.image-name}}-${PLATFORM_PAIR}
+          docker push ${{env.REGISTRY_IMAGE}}:${{matrix.image-name}}-${PLATFORM_PAIR}
   
   merge:
     runs-on: ubuntu-24.04
@@ -110,12 +115,12 @@ jobs:
         ]
 
     steps:
-      - name: Login to GHCR (org token recommended for manifest)
+      - name: Login to GHCR
         uses: docker/login-action@v4
         with:
           registry: ${{ env.GHCR_REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.ORGTOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -124,16 +129,16 @@ jobs:
         run: |
           docker buildx imagetools create \
             --annotation "index:org.opencontainers.image.title=overleaf-pro-dev-${{ matrix.image-name }}" \
-            --annotation "index:org.opencontainers.image.description=Overleaf Pro development image for the ${{ matrix.image-name }} service, rebuilt nightly from server-pro, maintained by ayaka-notes." \
-            --annotation "index:org.opencontainers.image.source=https://github.com/ayaka-notes/ayakaleaf-pro" \
+            --annotation "index:org.opencontainers.image.description=Overleaf Pro development image for the ${{ matrix.image-name }} service, maintained by CptKK." \
+            --annotation "index:org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
             --annotation "index:org.opencontainers.image.version=${{ github.sha }}" \
-            -t ghcr.io/ayaka-notes/overleaf-pro/dev:${{ matrix.image-name }} \
-            ghcr.io/ayaka-notes/overleaf-pro/dev:${{ matrix.image-name }}-amd64 \
-            ghcr.io/ayaka-notes/overleaf-pro/dev:${{ matrix.image-name }}-arm64
+            -t ${{ env.REGISTRY_IMAGE }}:${{ matrix.image-name }} \
+            ${{ env.REGISTRY_IMAGE }}:${{ matrix.image-name }}-amd64 \
+            ${{ env.REGISTRY_IMAGE }}:${{ matrix.image-name }}-arm64
 
       - name: Inspect manifest
         run: |
-          docker buildx imagetools inspect ghcr.io/ayaka-notes/overleaf-pro/dev:${{ matrix.image-name }}
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ matrix.image-name }}
 
   clean-image:
     runs-on: ubuntu-24.04
@@ -142,8 +147,8 @@ jobs:
       - name: Delete old images
         uses: snok/container-retention-policy@v3.1.0
         with:
-          image-names: overleaf-pro/dev*
+          image-names: overleaf-pro/dev
           cut-off: 7d
-          account: ayaka-notes
+          account: user
           tag-selection: untagged
-          token: ${{ secrets.ORGTOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}

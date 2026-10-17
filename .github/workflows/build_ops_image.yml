@@ -1,19 +1,13 @@
 # ---------------------------------
-# This workflow is used to build overleaf image automatically
+# This workflow is used to build and publish operations images manually
 #
 # Published at:
-#     ghcr.io/ayaka-notes/overleaf-pro/ops
+#     ghcr.io/cpt-kk/overleaf-pro/ops
 #
 # ---------------------------------
 
 name: Build Operations Image
 on:
-  push:
-    branches:
-      - server-pro
-  pull_request:
-    branches:
-      - server-pro
   workflow_dispatch:
     inputs:
       no_cache:
@@ -25,18 +19,18 @@ permissions:
   packages: write
 env:
   DOCKER_REGISTRY: ghcr.io
-  IMAGE_NAME: ayaka-notes/overleaf-pro
+  IMAGE_NAME: cpt-kk/overleaf-pro
 
 jobs:
   build-image:
     runs-on: ubuntu-24.04
     steps:
-      # If the event is a pull request, checkout the head sha of the PR
+      # Build the exact commit selected for this manual run.
       - name: "Checkout Current Repository"
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.sha }}
 
       - name: "Login to GitHub Container Registry"
         uses: docker/login-action@v4
@@ -120,8 +114,8 @@ jobs:
             sharelatex/sharelatex:latest
           annotations: |
             org.opencontainers.image.title=overleaf-pro-ops
-            org.opencontainers.image.description=Overleaf Pro operations image, built from every push to server-pro, maintained by ayaka-notes. For testing only.
-            org.opencontainers.image.source=https://github.com/ayaka-notes/ayakaleaf-pro
+            org.opencontainers.image.description=Overleaf Pro operations image, built manually from the selected branch, maintained by CptKK. For testing only.
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.version=${{ steps.vars.outputs.MONOREPO_REVISION }}
             space.ayaka.overleaf-pro.ops.revision=${{ steps.vars.outputs.MONOREPO_REVISION }}
           # We don't want -${{ github.ref_name }} limit, just more cache hit
@@ -137,15 +131,12 @@ jobs:
         run: |
           cd ./server-ce
           github_short_sha=$(echo ${{ github.sha }} | head -c7)
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            github_short_sha=$(echo ${{ github.event.pull_request.head.sha }} | head -c7)
-          fi
           tag=$(TZ='Asia/Shanghai' date +'%Y%m%d%H%M')-$github_short_sha
           echo "Building tag: $tag"
           docker tag sharelatex/sharelatex:latest ${{env.DOCKER_REGISTRY}}/${{env.IMAGE_NAME}}/ops:$tag
           docker push ${{env.DOCKER_REGISTRY}}/${{env.IMAGE_NAME}}/ops:$tag
           # Scheduled tests use latest; only server-pro builds may update it.
-          if [ "$GITHUB_EVENT_NAME" != "pull_request" ] && [ "$GITHUB_REF" = "refs/heads/server-pro" ]; then
+          if [ "$GITHUB_REF" = "refs/heads/server-pro" ]; then
             docker tag sharelatex/sharelatex:latest ${{env.DOCKER_REGISTRY}}/${{env.IMAGE_NAME}}/ops:latest
             docker push ${{env.DOCKER_REGISTRY}}/${{env.IMAGE_NAME}}/ops:latest
           fi
@@ -154,8 +145,8 @@ jobs:
       - name: Delete old images
         uses: snok/container-retention-policy@v3.1.0
         with:
-          image-names: overleaf-pro/ops*
+          image-names: overleaf-pro/ops
           cut-off: 7d
-          account: ayaka-notes
+          account: user
           tag-selection: both
-          token: ${{ secrets.ORGTOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
