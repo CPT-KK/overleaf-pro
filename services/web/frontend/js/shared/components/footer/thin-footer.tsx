@@ -89,7 +89,7 @@ function ThinFooter({
             ))}
           </ul>
         </OLRow>
-        {env === 'server-ce' && (
+        {false && (
           <OLRow>
             <OLCol lg={12}>
               <p className="copyright-notice">
