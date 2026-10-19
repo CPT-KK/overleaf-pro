@@ -121,9 +121,7 @@ describe('EmailBuilder', function () {
         expect(ctx.email.html).to.not.contain(ctx.opts.owner.email)
         expect(ctx.email.subject).to.not.contain(ctx.opts.owner.email)
 
-        expect(ctx.email.html).to.contain(
-          'Please view the project to find out more'
-        )
+        expect(ctx.email.html).to.contain('请查看项目了解更多信息')
       })
     })
   })
@@ -149,7 +147,7 @@ describe('EmailBuilder', function () {
     })
 
     it('should replace spammy project name', function (ctx) {
-      ctx.email.html.indexOf('your project').should.not.equal(-1)
+      ctx.email.html.indexOf('你的项目').should.not.equal(-1)
     })
   })
 
@@ -299,10 +297,10 @@ describe('EmailBuilder', function () {
         describe('HTML email', function () {
           it('should include a CTA button and a fallback CTA link', function (ctx) {
             const dom = cheerio.load(ctx.email.html)
-            const buttonLink = dom('a:contains("Leave feedback")')
+            const buttonLink = dom('a:contains("提交反馈")')
             expect(buttonLink.length).to.equal(1)
             expect(buttonLink.attr('href')).to.equal(ctx.expectedUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.expectedUrl)
           })
         })
@@ -336,10 +334,10 @@ describe('EmailBuilder', function () {
         describe('HTML email', function () {
           it('should include a CTA button and a fallback CTA link', function (ctx) {
             const dom = cheerio.load(ctx.email.html)
-            const buttonLink = dom('a:contains("Leave feedback")')
+            const buttonLink = dom('a:contains("提交反馈")')
             expect(buttonLink.length).to.equal(1)
             expect(buttonLink.attr('href')).to.equal(ctx.expectedUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.expectedUrl)
           })
         })
@@ -379,10 +377,10 @@ describe('EmailBuilder', function () {
         describe('HTML email', function () {
           it('should include a CTA button and a fallback CTA link', function (ctx) {
             const dom = cheerio.load(ctx.email.html)
-            const buttonLink = dom('a:contains("View project")')
+            const buttonLink = dom('a:contains("查看项目")')
             expect(buttonLink.length).to.equal(1)
             expect(buttonLink.attr('href')).to.equal(ctx.expectedUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.expectedUrl)
           })
         })
@@ -419,10 +417,10 @@ describe('EmailBuilder', function () {
         describe('HTML email', function () {
           it('should include a CTA button and a fallback CTA link', function (ctx) {
             const dom = cheerio.load(ctx.email.html)
-            const buttonLink = dom('a:contains("Reset password")')
+            const buttonLink = dom('a:contains("重置密码")')
             expect(buttonLink.length).to.equal(1)
             expect(buttonLink.attr('href')).to.equal(ctx.opts.setNewPasswordUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.opts.setNewPasswordUrl)
           })
         })
@@ -460,10 +458,10 @@ describe('EmailBuilder', function () {
         describe('HTML email', function () {
           it('should include a CTA button and a fallback CTA link', function (ctx) {
             const dom = cheerio.load(ctx.email.html)
-            const buttonLink = dom('a:contains("Join now")')
+            const buttonLink = dom('a:contains("立即加入")')
             expect(buttonLink.length).to.equal(1)
             expect(buttonLink.attr('href')).to.equal(ctx.opts.acceptInviteUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.opts.acceptInviteUrl)
           })
         })
@@ -496,10 +494,10 @@ describe('EmailBuilder', function () {
         describe('HTML email', function () {
           it('should include a CTA button and a fallback CTA link', function (ctx) {
             const dom = cheerio.load(ctx.email.html)
-            const buttonLink = dom('a:contains("View Subscription Dashboard")')
+            const buttonLink = dom('a:contains("查看订阅面板")')
             expect(buttonLink.length).to.equal(1)
             expect(buttonLink.attr('href')).to.equal(ctx.expectedUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.expectedUrl)
           })
         })
@@ -528,10 +526,10 @@ describe('EmailBuilder', function () {
         describe('HTML email', function () {
           it('should include a CTA button and a fallback CTA link', function (ctx) {
             const dom = cheerio.load(ctx.email.html)
-            const buttonLink = dom(`a:contains("Open ${ctx.settings.appName}")`)
+            const buttonLink = dom(`a:contains("打开 ${ctx.settings.appName}")`)
             expect(buttonLink.length).to.equal(1)
             expect(buttonLink.attr('href')).to.equal(ctx.settings.siteUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.settings.siteUrl)
           })
         })
@@ -539,7 +537,7 @@ describe('EmailBuilder', function () {
         describe('plain text email', function () {
           it('should contain the CTA link', function (ctx) {
             expect(ctx.email.text).to.contain(
-              `Open ${ctx.settings.appName}: ${ctx.settings.siteUrl}`
+              `打开 ${ctx.settings.appName}: ${ctx.settings.siteUrl}`
             )
           })
         })
@@ -563,10 +561,10 @@ describe('EmailBuilder', function () {
         describe('HTML email', function () {
           it('should include a CTA button and a fallback CTA link', function (ctx) {
             const dom = cheerio.load(ctx.email.html)
-            const buttonLink = dom('a:contains("Set password")')
+            const buttonLink = dom('a:contains("设置密码")')
             expect(buttonLink.length).to.equal(1)
             expect(buttonLink.attr('href')).to.equal(ctx.opts.setNewPasswordUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.opts.setNewPasswordUrl)
           })
         })
@@ -607,10 +605,10 @@ describe('EmailBuilder', function () {
         describe('HTML email', function () {
           it('should include a CTA button and a fallback CTA link', function (ctx) {
             const dom = cheerio.load(ctx.email.html)
-            const buttonLink = dom('a:contains("View project")')
+            const buttonLink = dom('a:contains("查看项目")')
             expect(buttonLink.length).to.equal(1)
             expect(buttonLink.attr('href')).to.equal(ctx.opts.inviteUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.opts.inviteUrl)
           })
         })
@@ -632,46 +630,40 @@ describe('EmailBuilder', function () {
             userIsManaged: false,
           }
           const email = ctx.EmailBuilder.buildEmail('groupSSODisabled', opts)
-          expect(email.subject).to.equal(
-            'A change to your Overleaf login options'
-          )
+          expect(email.subject).to.equal('你的 Overleaf 登录方式已变更')
           const dom = cheerio.load(email.html)
           expect(email.html).to.exist
           expect(email.html).to.contain(
-            'Your group administrator has disabled single sign-on for your group.'
+            '你的团队管理员已停用该团队的单点登录（SSO）。'
           )
-          expect(email.html).to.contain(
-            'You can still log in to Overleaf using one of our other'
-          )
-          const loginLink = dom('a:contains("login options")')
+          expect(email.html).to.contain('你仍然可以通过其他')
+          const loginLink = dom('a:contains("登录方式")')
           expect(loginLink.attr('href')).to.equal(
             `${ctx.settings.siteUrl}/login`
           )
-          const passwordLink = dom('a:contains("Set your new password")')
+          const passwordLink = dom('a:contains("设置新密码")')
           expect(passwordLink.attr('href')).to.equal(setNewPasswordUrl)
-          expect(email.html).to.contain(
-            "If you don't have a password, you can set one now."
-          )
+          expect(email.html).to.contain('如果你还没有密码，现在就可以设置。')
           expect(email.text).to.exist
           const expectedPlainText = [
-            'Hi,',
+            '你好，',
             '',
-            'Your group administrator has disabled single sign-on for your group.',
-            '',
-            '',
-            '',
-            'What does this mean for you?',
-            '',
-            'You can still log in to Overleaf using one of our other login options or with your email address and password.',
-            '',
-            "If you don't have a password, you can set one now.",
-            '',
-            `Set your new password: ${setNewPasswordUrl}`,
+            '你的团队管理员已停用该团队的单点登录（SSO）。',
             '',
             '',
             '',
-            'Regards,',
-            `The ${ctx.settings.appName} Team - ${ctx.settings.siteUrl}`,
+            '这对你意味着什么？',
+            '',
+            '你仍然可以通过其他登录方式，或使用邮箱和密码登录 Overleaf。',
+            '',
+            '如果你还没有密码，现在就可以设置。',
+            '',
+            `设置新密码: ${setNewPasswordUrl}`,
+            '',
+            '',
+            '',
+            '此致，',
+            `${ctx.settings.appName} 团队 - ${ctx.settings.siteUrl}`,
           ]
           expect(email.text.split(/\r?\n/)).to.deep.equal(expectedPlainText)
         })
@@ -685,18 +677,16 @@ describe('EmailBuilder', function () {
             userIsManaged: true,
           }
           const email = ctx.EmailBuilder.buildEmail('groupSSODisabled', opts)
-          expect(email.subject).to.equal(
-            'Action required: Set your Overleaf password'
-          )
+          expect(email.subject).to.equal('需要操作：设置你的 Overleaf 密码')
           const dom = cheerio.load(email.html)
           expect(email.html).to.exist
           expect(email.html).to.contain(
-            'Your group administrator has disabled single sign-on for your group.'
+            '你的团队管理员已停用该团队的单点登录（SSO）。'
           )
           expect(email.html).to.contain(
-            'You now need an email address and password to sign in to your Overleaf account.'
+            '你现在需要使用邮箱地址和密码登录你的 Overleaf 账户。'
           )
-          const ctaLink = dom('a:contains("Set your new password")')
+          const ctaLink = dom('a:contains("设置新密码")')
           expect(ctaLink.attr('href')).to.equal(
             `${ctx.settings.siteUrl}/user/password/reset`
           )
@@ -704,22 +694,22 @@ describe('EmailBuilder', function () {
           expect(email.text).to.exist
 
           const expectedPlainText = [
-            'Hi,',
+            '你好，',
             '',
-            'Your group administrator has disabled single sign-on for your group.',
-            '',
-            '',
-            '',
-            'What does this mean for you?',
-            '',
-            'You now need an email address and password to sign in to your Overleaf account.',
-            '',
-            `Set your new password: ${setNewPasswordUrl}`,
+            '你的团队管理员已停用该团队的单点登录（SSO）。',
             '',
             '',
             '',
-            'Regards,',
-            `The ${ctx.settings.appName} Team - ${ctx.settings.siteUrl}`,
+            '这对你意味着什么？',
+            '',
+            '你现在需要使用邮箱地址和密码登录你的 Overleaf 账户。',
+            '',
+            `设置新密码: ${setNewPasswordUrl}`,
+            '',
+            '',
+            '',
+            '此致，',
+            `${ctx.settings.appName} 团队 - ${ctx.settings.siteUrl}`,
           ]
 
           expect(email.text.split(/\r?\n/)).to.deep.equal(expectedPlainText)
@@ -794,9 +784,9 @@ describe('EmailBuilder', function () {
 
         describe('HTML email', function () {
           it('should include help links', function (ctx) {
-            const helpGuidesLink = ctx.dom('a:contains("Help Guides")')
-            const templatesLink = ctx.dom('a:contains("Templates")')
-            const logInLink = ctx.dom('a:contains("log in")')
+            const helpGuidesLink = ctx.dom('a:contains("帮助指南")')
+            const templatesLink = ctx.dom('a:contains("模板")')
+            const logInLink = ctx.dom('a:contains("重新登录")')
             expect(helpGuidesLink.length).to.equal(1)
             expect(templatesLink.length).to.equal(1)
             expect(logInLink.length).to.equal(1)
@@ -834,7 +824,7 @@ describe('EmailBuilder', function () {
 
         describe('HTML email', function () {
           it('should include links', function (ctx) {
-            const resetPasswordLink = ctx.dom('a:contains("set a password")')
+            const resetPasswordLink = ctx.dom('a:contains("设置密码")')
             expect(resetPasswordLink.length).to.equal(1)
             expect(resetPasswordLink.attr('href')).to.equal(
               ctx.passwordResetUrl
@@ -879,8 +869,8 @@ describe('EmailBuilder', function () {
           })
 
           it('should include tax exemption verification text', function (ctx) {
-            expect(ctx.email.html).to.contain('tax exempt')
-            expect(ctx.email.html).to.contain('verification')
+            expect(ctx.email.html).to.contain('免税')
+            expect(ctx.email.html).to.contain('验证')
           })
         })
 
@@ -894,8 +884,8 @@ describe('EmailBuilder', function () {
           })
 
           it('should include tax exemption verification text', function (ctx) {
-            expect(ctx.email.text).to.contain('tax exempt')
-            expect(ctx.email.text).to.contain('verification')
+            expect(ctx.email.text).to.contain('免税')
+            expect(ctx.email.text).to.contain('验证')
           })
         })
       })
@@ -1036,10 +1026,10 @@ describe('EmailBuilder', function () {
             expect(ctx.email.html).to.contain(
               'Remove inactive users to free up licenses'
             )
-            const buttonLink = dom('a:contains("Add licenses")')
+            const buttonLink = dom('a:contains("增加席位")')
             expect(buttonLink).to.exist
             expect(buttonLink.attr('href')).to.equal(ctx.expectedUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.expectedUrl)
           })
         })
@@ -1100,7 +1090,7 @@ describe('EmailBuilder', function () {
             'new users from your domain can no longer'
           )
           expect(ctx.email.html).to.contain('What you can do now:')
-          const buttonLink = dom('a:contains("Add licenses")')
+          const buttonLink = dom('a:contains("增加席位")')
           expect(buttonLink.attr('href')).to.equal(ctx.expectedUrl)
           expect(ctx.email.text).to.contain(ctx.expectedUrl)
         })
@@ -1157,7 +1147,7 @@ describe('EmailBuilder', function () {
             const buttonLink = dom('a:contains("Open your projects")')
             expect(buttonLink.length).to.equal(1)
             expect(buttonLink.attr('href')).to.equal(ctx.expectedUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.expectedUrl)
           })
         })
@@ -1213,7 +1203,7 @@ describe('EmailBuilder', function () {
             const buttonLink = dom('a:contains("Open your projects")')
             expect(buttonLink.length).to.equal(1)
             expect(buttonLink.attr('href')).to.equal(ctx.expectedUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.expectedUrl)
           })
         })
@@ -1278,7 +1268,7 @@ describe('EmailBuilder', function () {
             const buttonLink = dom('a:contains("Open your projects")')
             expect(buttonLink.length).to.equal(1)
             expect(buttonLink.attr('href')).to.equal(ctx.expectedUrl)
-            expect(ctx.email.html).to.contain('copy and paste this link')
+            expect(ctx.email.html).to.contain('将此链接复制并粘贴')
             expect(ctx.email.html).to.contain(ctx.expectedUrl)
           })
         })
@@ -1317,7 +1307,7 @@ describe('EmailBuilder', function () {
           expect(email.html).to.contain(
             'Domain capture is active for example.com'
           )
-          expect(email.text).to.contain('Hi,')
+          expect(email.text).to.contain('你好，')
           expect(email.html).to.contain('/manage/groups/group-123/settings')
           expect(email.text).to.contain('/manage/groups/group-123/settings')
         })
@@ -1355,8 +1345,8 @@ describe('EmailBuilder', function () {
             }
           )
 
-          expect(email.text).to.contain('Hi Ada,')
-          expect(email.html).to.contain('Hi Ada,')
+          expect(email.text).to.contain('你好，Ada：')
+          expect(email.html).to.contain('你好，Ada：')
         })
       })
 
@@ -1369,7 +1359,7 @@ describe('EmailBuilder', function () {
           })
 
           expect(email.subject).to.equal('Your domain is verified')
-          expect(email.text).to.contain('Hi,')
+          expect(email.text).to.contain('你好，')
           expect(email.html).to.contain("We've verified")
           expect(email.html).to.contain('<b>example.com</b>')
           expect(email.html).to.contain(
@@ -1403,8 +1393,8 @@ describe('EmailBuilder', function () {
             firstName: 'Ada',
           })
 
-          expect(email.text).to.contain('Hi Ada,')
-          expect(email.html).to.contain('Hi Ada,')
+          expect(email.text).to.contain('你好，Ada：')
+          expect(email.html).to.contain('你好，Ada：')
         })
       })
 
@@ -1453,7 +1443,7 @@ describe('EmailBuilder', function () {
           })
 
           it('uses the default greeting when firstName is not provided', function (ctx) {
-            expect(ctx.email.text).to.contain('Hi,')
+            expect(ctx.email.text).to.contain('你好，')
           })
 
           it('uses firstName in the greeting when provided', function (ctx) {
@@ -1465,8 +1455,8 @@ describe('EmailBuilder', function () {
               }
             )
 
-            expect(email.text).to.contain('Hi Ada,')
-            expect(email.html).to.contain('Hi Ada,')
+            expect(email.text).to.contain('你好，Ada：')
+            expect(email.html).to.contain('你好，Ada：')
           })
         })
 
