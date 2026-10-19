@@ -8,12 +8,18 @@ describe('payment-dates', function () {
   describe('formatPaymentDate', function () {
     it('formats a date in UTC', function () {
       expect(formatPaymentDate('2025-02-20T12:00:00.000Z')).to.equal(
-        'February 20th, 2025'
+        '2025-02-20'
       )
     })
     it('returns null for missing dates', function () {
       expect(formatPaymentDate(null)).to.be.null
       expect(formatPaymentDate(undefined)).to.be.null
+    })
+
+    it('uses the UTC date when the input crosses midnight', function () {
+      expect(formatPaymentDate('2025-02-20T23:30:00-08:00')).to.equal(
+        '2025-02-21'
+      )
     })
   })
 
@@ -26,6 +32,12 @@ describe('payment-dates', function () {
     it('returns null for missing dates', function () {
       expect(formatPaymentDateTime(null)).to.be.null
       expect(formatPaymentDateTime(undefined)).to.be.null
+    })
+
+    it('keeps the UTC time when the input crosses midnight', function () {
+      expect(formatPaymentDateTime('2025-02-20T23:30:00-08:00')).to.equal(
+        'February 21st, 2025 7:30 AM UTC'
+      )
     })
   })
 })

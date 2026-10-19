@@ -65,7 +65,7 @@ describe('GroupMembers', function () {
           cy.get('tr:nth-child(1)').within(() => {
             cy.contains('john.doe@test.com')
             cy.contains('John Doe')
-            cy.contains('15th Jan 2023')
+            cy.contains('2023-01-15')
             cy.findByTestId('badge-pending-invite').should(
               'have.text',
               'Pending invite'
@@ -75,7 +75,7 @@ describe('GroupMembers', function () {
           cy.get('tr:nth-child(2)').within(() => {
             cy.contains('bobby.lapointe@test.com')
             cy.contains('Bobby Lapointe')
-            cy.contains('2nd Jan 2023')
+            cy.contains('2023-01-02')
             cy.findByTestId('badge-pending-invite').should('not.exist')
           })
         })
@@ -172,7 +172,7 @@ describe('GroupMembers', function () {
           cy.get('tr:nth-child(1)').within(() => {
             cy.contains('bobby.lapointe@test.com')
             cy.contains('Bobby Lapointe')
-            cy.contains('2nd Jan 2023')
+            cy.contains('2023-01-02')
             cy.contains('Pending invite').should('not.exist')
           })
         })
@@ -259,7 +259,7 @@ describe('GroupMembers', function () {
           cy.get('tr:nth-child(1)').within(() => {
             cy.contains('john.doe@test.com')
             cy.contains('John Doe')
-            cy.contains('15th Jan 2023')
+            cy.contains('2023-01-15')
             cy.get('.visually-hidden').contains('Pending invite')
             cy.findByTestId('badge-pending-invite').should(
               'have.text',
@@ -271,7 +271,7 @@ describe('GroupMembers', function () {
           cy.get('tr:nth-child(2)').within(() => {
             cy.contains('bobby.lapointe@test.com')
             cy.contains('Bobby Lapointe')
-            cy.contains('2nd Jan 2023')
+            cy.contains('2023-01-02')
             cy.findByTestId('badge-pending-invite').should('not.exist')
             cy.get('.visually-hidden').contains('Not managed')
           })
@@ -381,7 +381,7 @@ describe('GroupMembers', function () {
           cy.get('tr:nth-child(1)').within(() => {
             cy.contains('bobby.lapointe@test.com')
             cy.contains('Bobby Lapointe')
-            cy.contains('2nd Jan 2023')
+            cy.contains('2023-01-02')
           })
         })
     })

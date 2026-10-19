@@ -83,7 +83,7 @@ describe('GroupUsers', function () {
         cy.get('tr:nth-child(1)').within(() => {
           cy.contains('john.doe@test.com')
           cy.contains('John Doe')
-          cy.contains('15th Jan 2023')
+          cy.contains('2023-01-15')
           cy.findByRole('combobox', { name: 'Select user role' }).should(
             'have.value',
             'admin'
@@ -94,7 +94,7 @@ describe('GroupUsers', function () {
         cy.get('tr:nth-child(2)').within(() => {
           cy.contains('bobby.lapointe@test.com')
           cy.contains('Bobby Lapointe')
-          cy.contains('2nd Jan 2023')
+          cy.contains('2023-01-02')
           cy.findByRole('combobox', { name: 'Select user role' }).should(
             'have.value',
             'manager'
@@ -116,7 +116,7 @@ describe('GroupUsers', function () {
         cy.get('tr:nth-child(4)').within(() => {
           cy.contains('david.jones@test.com')
           cy.contains('David Jones')
-          cy.contains('4th Jan 2023')
+          cy.contains('2023-01-04')
           cy.findByRole('combobox', { name: 'Select user role' }).should(
             'have.value',
             'member'

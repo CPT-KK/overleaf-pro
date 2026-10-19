@@ -25,9 +25,5 @@ export function relativeDate(date: moment.MomentInput) {
 }
 
 export function formatTimeBasedOnYear(date: moment.MomentInput) {
-  const currentDate = moment()
-
-  return currentDate.diff(date, 'years') > 0
-    ? formatTime(date, 'D MMMM YYYY, h:mm a')
-    : formatTime(date, 'D MMMM, h:mm a')
+  return formatTime(date, 'YYYY-MM-DD HH:mm')
 }
