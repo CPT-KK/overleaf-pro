@@ -41,7 +41,9 @@ describe('<HotkeysModal />', function () {
     const hotkeys = baseElement.querySelectorAll(
       '[data-test-selector="hotkey"]'
     )
-    expect(hotkeys).to.have.length(19)
+    expect(hotkeys).to.have.length(21)
+    expect(screen.getByText('Go to code location in PDF')).to.exist
+    expect(screen.getByText('Go to PDF location in code')).to.exist
   })
 
   it('adds extra hotkey descriptions when Track Changes is enabled', function () {
@@ -50,20 +52,24 @@ describe('<HotkeysModal />', function () {
     const hotkeys = baseElement.querySelectorAll(
       '[data-test-selector="hotkey"]'
     )
-    expect(hotkeys).to.have.length(22)
+    expect(hotkeys).to.have.length(24)
   })
 
   it('uses Ctrl for non-macOS', function () {
     renderModal()
 
-    expect(screen.getAllByText(/Ctrl/)).to.have.length(16)
+    expect(screen.getAllByText(/Ctrl/)).to.have.length(18)
     expect(screen.queryByText(/Cmd/)).to.not.exist
+    expect(screen.getByText('Ctrl + Alt + J')).to.exist
+    expect(screen.getByText('Ctrl + Click')).to.exist
   })
 
   it('uses Cmd for macOS', function () {
     renderModal({ isMac: true })
 
-    expect(screen.getAllByText(/Cmd/)).to.have.length(12)
+    expect(screen.getAllByText(/Cmd/)).to.have.length(14)
     expect(screen.getAllByText(/Ctrl/)).to.have.length(4)
+    expect(screen.getByText('Cmd + Option + J')).to.exist
+    expect(screen.getByText('Cmd + Click')).to.exist
   })
 })

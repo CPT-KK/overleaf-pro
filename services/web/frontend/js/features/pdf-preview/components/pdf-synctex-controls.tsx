@@ -12,6 +12,8 @@ import { useFeatureFlag } from '@/shared/context/split-test-context'
 import OLSpinner from '@/shared/components/ol/ol-spinner'
 import { sendMB } from '@/infrastructure/event-tracking'
 import { useCommandProvider } from '@/features/ide-react/hooks/use-command-provider'
+import { CursorPosition } from '@/features/ide-react/types/cursor-position'
+import useEventListener from '@/shared/hooks/use-event-listener'
 
 const GoToCodeButton = memo(function GoToCodeButton({
   syncToCode,
@@ -168,7 +170,7 @@ const GoToPdfButton = memo(function GoToPdfButton({
 })
 
 function PdfSynctexControls() {
-  const { detachRole } = useLayoutContext()
+  const { changeLayout, detachRole, pdfLayout, view } = useLayoutContext()
   const { pdfUrl, pdfViewer, position } = useCompileContext()
   const {
     syncToCode,
@@ -178,16 +180,44 @@ function PdfSynctexControls() {
     canSyncToPdf,
   } = useSynctex()
   const visualPreviewEnabled = useFeatureFlag('visual-preview')
+  const canUseSynctex = pdfUrl && pdfViewer !== 'native' && !visualPreviewEnabled
+  const pdfIsHidden = !detachRole && pdfLayout === 'flat' && view !== 'pdf'
 
-  if (visualPreviewEnabled) {
-    return null
-  }
+  useEventListener(
+    'cursor:editor:syncToPdf',
+    useCallback(
+      (event: CustomEvent<CursorPosition | null>) => {
+        const cursor = event.detail
 
-  if (!position) {
-    return null
-  }
+        // Outline navigation emits this event without a cursor position.
+        if (!cursor) {
+          if (!pdfIsHidden) {
+            syncToPdf()
+          }
+          return
+        }
 
-  if (!pdfUrl || pdfViewer === 'native') {
+        if (!canUseSynctex || syncToPdfInFlight || detachRole === 'detached') {
+          return
+        }
+
+        if (pdfIsHidden) {
+          changeLayout('sideBySide')
+        }
+        syncToPdf(cursor)
+      },
+      [
+        canUseSynctex,
+        changeLayout,
+        detachRole,
+        pdfIsHidden,
+        syncToPdf,
+        syncToPdfInFlight,
+      ]
+    )
+  )
+
+  if (!canUseSynctex || !position || pdfIsHidden) {
     return null
   }
 

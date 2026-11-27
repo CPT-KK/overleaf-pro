@@ -17,7 +17,7 @@ export type IdeEvents = {
   'editor:gotoLine': [options: GotoLineOptions]
   'cursor:editor:update': [position: CursorPosition]
   'outline-toggled': [isOpen: boolean]
-  'cursor:editor:syncToPdf': []
+  'cursor:editor:syncToPdf': [position?: CursorPosition]
   'scroll:editor:update': [middleVisibleLine?: number]
   'comment:start_adding': []
   'history:toggle': []

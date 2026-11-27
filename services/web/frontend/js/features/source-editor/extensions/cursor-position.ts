@@ -67,7 +67,7 @@ export const cursorPosition = ({
 }
 
 // convert the selection head to a row and column
-const buildCursorPosition = (state: EditorState) => {
+export const buildCursorPosition = (state: EditorState) => {
   const pos = state.selection.main.head
   const line = state.doc.lineAt(pos)
   const row = line.number - 1 // 0-indexed

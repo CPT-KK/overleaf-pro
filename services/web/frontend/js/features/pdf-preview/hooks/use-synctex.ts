@@ -23,7 +23,7 @@ import {
 } from '@/features/pdf-preview/components/synctex-toasts'
 
 export default function useSynctex(): {
-  syncToPdf: () => boolean
+  syncToPdf: (position?: CursorPosition) => boolean
   syncToCode: ({ visualOffset }: { visualOffset?: number }) => void
   syncToPdfInFlight: boolean
   syncToCodeInFlight: boolean
@@ -149,34 +149,28 @@ export default function useSynctex(): {
     cursorPositionRef.current = cursorPosition
   }, [cursorPosition])
 
-  const syncToPdf = useCallback(() => {
-    const file = getCurrentFilePath()
-    if (!file) {
-      showSynctexNoFileToast()
-      return false
-    }
+  const syncToPdf = useCallback(
+    (position = cursorPositionRef.current) => {
+      const file = getCurrentFilePath()
+      if (!file) {
+        showSynctexNoFileToast()
+        return false
+      }
 
-    if (cursorPositionRef.current) {
-      const { row, column } = cursorPositionRef.current
+      if (!position) {
+        return false
+      }
 
       const params = new URLSearchParams({
         file,
-        line: String(row + 1),
-        column: String(column),
+        line: String(position.row + 1),
+        column: String(position.column),
       }).toString()
 
       goToPdfLocation(params)
       return true
-    }
-
-    return false
-  }, [getCurrentFilePath, goToPdfLocation])
-
-  useEventListener(
-    'cursor:editor:syncToPdf',
-    useCallback(() => {
-      syncToPdf()
-    }, [syncToPdf])
+    },
+    [getCurrentFilePath, goToPdfLocation]
   )
 
   const positionRef = useRef(position)

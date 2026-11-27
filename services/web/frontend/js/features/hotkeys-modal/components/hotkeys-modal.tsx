@@ -30,6 +30,8 @@ export default memo(function HotkeysModal({
   const themed = useFeatureFlag('themed-modals')
 
   const ctrl = isMac ? 'Cmd' : 'Ctrl'
+  const alt = isMac ? 'Option' : 'Alt'
+  const click = t('hotkey_mouse_click', { defaultValue: 'Click' })
 
   return (
     <OLModal
@@ -90,6 +92,21 @@ export default memo(function HotkeysModal({
             <Hotkey
               combination={`${ctrl} + Shift + L`}
               description={t('hotkey_go_to_line')}
+            />
+          </OLCol>
+        </OLRow>
+
+        <OLRow>
+          <OLCol xs={6}>
+            <Hotkey
+              combination={`${ctrl} + ${alt} + J`}
+              description={t('go_to_code_location_in_pdf')}
+            />
+          </OLCol>
+          <OLCol xs={6}>
+            <Hotkey
+              combination={`${ctrl} + ${click}`}
+              description={t('go_to_pdf_location_in_code_action')}
             />
           </OLCol>
         </OLRow>

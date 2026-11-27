@@ -16,6 +16,7 @@ import usePresentationMode from '../hooks/use-presentation-mode'
 import useMouseWheelZoom from '../hooks/use-mouse-wheel-zoom'
 import { PDFJS } from '../util/pdf-js'
 import { PDFFile } from '@ol-types/compile'
+import { isMac } from '@/shared/utils/os'
 
 type PdfJsViewerProps = {
   url: string
@@ -246,43 +247,59 @@ function PdfJsViewer({ url, pdfFile }: PdfJsViewerProps) {
     }
   }, [setPosition, pdfJsWrapper, initialised])
 
-  // listen for double-click events
   useEffect(() => {
-    if (pdfJsWrapper) {
-      const handleTextlayerrendered = (textLayer: any) => {
-        // handle both versions for backwards-compatibility
-        const textLayerDiv =
-          textLayer.source.textLayerDiv ?? textLayer.source.textLayer.div
+    if (!pdfJsWrapper) return
 
-        if (!textLayerDiv.dataset.listeningForDoubleClick) {
-          textLayerDiv.dataset.listeningForDoubleClick = true
+    const { container } = pdfJsWrapper
+    const handleSyncToCode = (event: MouseEvent) => {
+      if (!(event.target instanceof Element)) return
 
-          const doubleClickListener = (event: MouseEvent) => {
-            const clickPosition = pdfJsWrapper.clickPosition(
-              event,
-              textLayerDiv.closest('.page').querySelector('canvas'),
-              textLayer.pageNumber - 1
-            )
+      const syncModifier = isMac ? event.metaKey : event.ctrlKey
+      const isModifiedClick =
+        event.type === 'click' &&
+        syncModifier &&
+        event.button === 0 &&
+        event.detail <= 1
+      const isTextDoubleClick =
+        event.type === 'dblclick' &&
+        !syncModifier &&
+        event.target.closest('.textLayer')
+      if (!isModifiedClick && !isTextDoubleClick) return
 
-            if (clickPosition) {
-              window.dispatchEvent(
-                new CustomEvent('synctex:sync-to-position', {
-                  detail: {
-                    position: clickPosition,
-                    selectText: window.getSelection()?.toString(),
-                  },
-                })
-              )
-            }
-          }
+      const page = event.target.closest<HTMLElement>('.page[data-page-number]')
+      const canvas = page?.querySelector('canvas')
+      if (!page || !canvas) return
 
-          textLayerDiv.addEventListener('dblclick', doubleClickListener)
-        }
+      const position = pdfJsWrapper.clickPosition(
+        event,
+        canvas,
+        Number(page.dataset.pageNumber) - 1
+      )
+      if (!position) return
+
+      if (isModifiedClick) {
+        event.preventDefault()
+        event.stopPropagation()
       }
 
-      pdfJsWrapper.eventBus.on('textlayerrendered', handleTextlayerrendered)
-      return () =>
-        pdfJsWrapper.eventBus.off('textlayerrendered', handleTextlayerrendered)
+      window.dispatchEvent(
+        new CustomEvent('synctex:sync-to-position', {
+          detail: {
+            position,
+            selectText: isTextDoubleClick
+              ? window.getSelection()?.toString()
+              : undefined,
+          },
+        })
+      )
+    }
+
+    // Capture the modified click before a PDF link can handle it.
+    container.addEventListener('click', handleSyncToCode, true)
+    container.addEventListener('dblclick', handleSyncToCode)
+    return () => {
+      container.removeEventListener('click', handleSyncToCode, true)
+      container.removeEventListener('dblclick', handleSyncToCode)
     }
   }, [pdfJsWrapper])
 

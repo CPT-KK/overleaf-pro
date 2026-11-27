@@ -98,11 +98,12 @@ export default function MainLayout() {
                   tooltipWhenOpen={t('tooltip_hide_pdf')}
                   tooltipWhenClosed={t('tooltip_show_pdf')}
                 />
-                {pdfLayout === 'sideBySide' && (
-                  <div className="synctex-controls">
-                    <DefaultSynctexControl />
-                  </div>
-                )}
+                <div
+                  className="synctex-controls"
+                  hidden={pdfLayout !== 'sideBySide'}
+                >
+                  <DefaultSynctexControl />
+                </div>
               </HorizontalResizeHandle>
               <Panel
                 collapsible
@@ -120,11 +121,6 @@ export default function MainLayout() {
                 aria-label={t('pdf_preview')}
               >
                 <PdfPreview />
-                {pdfLayout === 'flat' && view === 'pdf' && (
-                  <div className="synctex-controls" hidden>
-                    <DefaultSynctexControl />
-                  </div>
-                )}
               </Panel>
             </PanelGroup>
           </Panel>

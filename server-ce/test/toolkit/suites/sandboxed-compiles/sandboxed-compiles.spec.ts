@@ -166,6 +166,8 @@ describe('sandboxed compiles', function () {
   })
 
   describe('SyncTeX', function () {
+    const isMac = Cypress.platform === 'darwin'
+    const syncShortcut = isMac ? '{meta+alt+j}' : '{ctrl+alt+j}'
     let name: string
 
     beforeEach(function () {
@@ -179,8 +181,8 @@ describe('sandboxed compiles', function () {
     })
 
     it('jumps from the PDF to the code', function () {
-      cy.log('double click on the title in the PDF')
-      pdfPreview().findByText(name).dblclick()
+      cy.log('modifier-click on the title in the PDF')
+      pdfPreview().findByText(name).click({ ctrlKey: !isMac, metaKey: isMac })
       cy.get('.cm-activeLine').should('have.text', '\\maketitle')
 
       cy.log('double click on Section A in the PDF')
@@ -230,7 +232,8 @@ describe('sandboxed compiles', function () {
 
       cy.log('go to Section A')
       editor().within(() => cy.findByText('Section A').click())
-      goToCodeLocationInPdf()
+      cy.focused().type(syncShortcut)
+      cy.wait('@syncCode', { timeout: 60_000 })
       cy.get('@title').then((title: any) => {
         waitUntilScrollingFinished(PDF_VIEWER, title)
           .as('sectionA')
@@ -238,8 +241,12 @@ describe('sandboxed compiles', function () {
       })
 
       cy.log('go to Section B')
+      cy.findByRole('button', { name: 'Click to hide the PDF' }).click()
+      cy.findByRole('button', { name: 'Click to show the PDF' }).should('exist')
       editor().within(() => cy.findByText('Section B').click())
-      goToCodeLocationInPdf()
+      cy.focused().type(syncShortcut)
+      cy.wait('@syncCode', { timeout: 60_000 })
+      cy.findByRole('button', { name: 'Click to hide the PDF' }).should('exist')
       cy.get('@sectionA').then((sectionA: any) => {
         waitUntilScrollingFinished(PDF_VIEWER, sectionA).should(
           'be.greaterThan',
